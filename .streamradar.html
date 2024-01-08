@@ -3,63 +3,25 @@
   <head>
     <meta charset="utf-8" />
     <title>HLS Player</title>
-    <link
-      href="https://unpkg.com/video.js/dist/video-js.css"
-      rel="stylesheet"
-    />
-    <script src="https://unpkg.com/video.js/dist/video.js"></script>
-    <script src="https://unpkg.com/videojs-contrib-hls/dist/videojs-contrib-hls.js"></script>
     <style>
       body {
         background-color: black;
-        margin: 0;
-        overflow: hidden;
-      }
-
-      #my_video_1 {
-        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
         height: 100vh;
+        margin: 0;
       }
 
-      .hide-play-button .vjs-big-play-button {
-        display: none !important;
-      }
-
-      .show-play-button .vjs-big-play-button {
-        display: block !important;
+      iframe {
+        width: 100%;
+        max-width: 600px;
+        height: 400px;
       }
     </style>
   </head>
   <body>
-    <video
-      id="my_video_1"
-      class="video-js vjs-default-skin vjs-big-play-centered"
-      preload="auto"
-      data-setup='{"fluid": true}'
-      poster="https://upload.wikimedia.org/wikipedia/commons/thumb/6/60/SMPTE_Color_Bars_16x9.svg/1920px-SMPTE_Color_Bars_16x9.svg.png"
-    ></video>
-
-    <script>
-      const player = videojs("my_video_1", {
-        controlBar: {
-          fullscreenToggle: true,
-        },
-      });
-
-      player.src({
-        src: "https://corsproxy.org/?https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8",
-        type: "application/x-mpegURL",
-      });
-
-      player.ready(function () {
-        this.addClass("show-play-button");
-      });
-
-      player.on("play", () => {
-        console.log("played");
-        player.removeClass("show-play-button");
-        player.addClass("hide-play-button");
-      });
-    </script>
+    <iframe src="https://bradmax.com/client/embed-player/d9decbf0d308f4bb91825c3f3a2beb7b0aaee2f6_8493?mediaUrl=https://corsproxy.org/?https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8"
+            frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
   </body>
 </html>
