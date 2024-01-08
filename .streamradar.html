@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Streamradar</title>
+    <link href="https://cdn.jsdelivr.net/npm/hls.js@latest/dist/hls.min.css" rel="stylesheet">
     <style>
         body {
             background-color: black;
@@ -14,22 +15,22 @@
             height: 100vh;
         }
 
-        video {
+        #video-player {
             width: 100%;
-            max-width: 600px; /* Ä°stediÄiniz geniÅliÄi ayarlayabilirsiniz */
+            max-width: 800px;
         }
     </style>
 </head>
 <body>
-    <video id="video" autoplay controls></video>
+    <video id="video-player" controls></video>
 
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
             if (Hls.isSupported()) {
-                var video = document.getElementById('video');
-                var hls = new Hls();
-                
+                const video = document.getElementById('video-player');
+                const hls = new Hls();
+
                 hls.loadSource('https://corsproxy.org/?https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8');
                 hls.attachMedia(video);
 
