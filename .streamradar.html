@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Streamradar</title>
+    <style>
+        body {
+            background-color: black;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        video {
+            width: 100%;
+            max-width: 600px; /* Ä°stediÄiniz geniÅliÄi ayarlayabilirsiniz */
+        }
+    </style>
+</head>
+<body>
+    <video id="video" autoplay controls></video>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            if (Hls.isSupported()) {
+                var video = document.getElementById('video');
+                var hls = new Hls();
+                
+                hls.loadSource('https://corsproxy.org/?https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8');
+                hls.attachMedia(video);
+
+                video.addEventListener('canplay', function () {
+                    video.play();
+                });
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = 'https://corsproxy.org/?https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8';
+                video.addEventListener('canplay', function () {
+                    video.play();
+                });
+            }
+        });
+    </script>
+</body>
+</html>
