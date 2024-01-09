@@ -5,9 +5,26 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>M3U8 Player</title>
     <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: black;
+        }
+
+        #video {
+            width: 100%;
+            max-width: 800px; /* Adjust the maximum width as needed */
+            height: auto;
+        }
+    </style>
 </head>
 <body>
-    <video id="video" controls width="640" height="360"></video>
+    <video id="video" controls></video>
 
     <script>
         // M3U8 dosyasını oynatmak için fonksiyon
