@@ -41,7 +41,7 @@
     var video = document.getElementById('videoPlayer');
     if (Hls.isSupported()) {
         var hls = new Hls();
-        hls.loadSource('https://corsproxy.org/?https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8');
+        hls.loadSource('https://api.allorigins.win/raw?url=https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8');
         hls.attachMedia(video);
     } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
         video.src = 'your_playlist_url.m3u8';
