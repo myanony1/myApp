@@ -3,61 +3,40 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>HLS Player</title>
-    <style>
-        body {
-            margin: 0;
-            padding: 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            background-color: #f0f0f0;
-        }
-
-        #videoContainer {
-            width: 100%;
-            max-width: 800px; /* Adjust the max-width as needed */
-        }
-
-        video {
-            width: 100%;
-            height: auto;
-            display: block;
-            margin: 0 auto;
-        }
-    </style>
+    <title>M3U8 Player</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
 </head>
 <body>
+    <video id="video" controls width="640" height="360"></video>
 
-<div id="videoContainer">
-    <video id="videoPlayer" controls>
-        Your browser does not support the video tag.
-    </video>
-</div>
+    <script>
+        // M3U8 dosyasını oynatmak için fonksiyon
+        function playM3u8(url) {
+            var video = document.getElementById('video');
+            var videoSrc = decodeURIComponent(url);
 
-<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
-<script>
-    var video = document.getElementById('videoPlayer');
-    if (Hls.isSupported()) {
-        var hls = new Hls();
-        hls.loadSource('https://api.allorigins.win/raw?url=https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8');
-        hls.attachMedia(video);
-    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
-        video.src = 'your_playlist_url.m3u8';
-    }
+            if (Hls.isSupported()) {
+                var hls = new Hls();
+                hls.loadSource(videoSrc);
+                hls.attachMedia(video);
+                hls.on(Hls.Events.MANIFEST_PARSED, function () {
+                    video.play();
+                });
+                document.title = url;
+            } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+                video.src = videoSrc;
+                video.addEventListener('loadedmetadata', function () {
+                    video.play();
+                });
+                document.title = url;
+            }
+        }
 
-    function onVideoPlay() {
-        console.log('Video is playing');
-    }
+        // Örnek bir M3U8 dosya URL'si
+        var m3u8Url = "https://corsproxy.org/?https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8";
 
-    function onVideoPause() {
-        console.log('Video is paused');
-    }
-
-    function onVideoEnd() {
-        console.log('Video has ended');
-    }
-</script>
+        // playM3u8 fonksiyonunu çağırarak videoyu oynat
+        playM3u8(m3u8Url);
+    </script>
 </body>
 </html>
