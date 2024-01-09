@@ -3,42 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Video Player</title>
+    <title>HLS Player</title>
     <style>
         body {
-            background-color: black;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
             margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            background-color: #f0f0f0;
         }
 
-        @media (max-width: 640px) {
-    #my-video {
-        height: auto;
-        max-width: 100%;
-    }
-}
+        #videoContainer {
+            width: 100%;
+            max-width: 800px; /* Adjust the max-width as needed */
+        }
+
+        video {
+            width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto;
+        }
     </style>
 </head>
 <body>
 
-<script src="https://cdn.fluidplayer.com/3.9.0/fluidplayer.min.js"></script>
+<div id="videoContainer">
+    <video id="videoPlayer" controls>
+        Your browser does not support the video tag.
+    </video>
+</div>
 
-<video id='my-video' controls>
-    <source src='https://corsproxy.org/?https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8' title='2160p' type='application/x-mpegURL' />
-</video>
+<script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+<script>
+    var video = document.getElementById('videoPlayer');
+    if (Hls.isSupported()) {
+        var hls = new Hls();
+        hls.loadSource('https://corsproxy.org/?https://worker-falling-waterfall-c56d.loyefnbyf.workers.dev/601?.m3u8');
+        hls.attachMedia(video);
+    } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+        video.src = 'your_playlist_url.m3u8';
+    }
 
-<script type="text/javascript">
-    var player = fluidPlayer(
-        'my-video',
-        {
-            layoutControls: {},
-            vastOptions: {}
-        }
-    );
+    function onVideoPlay() {
+        console.log('Video is playing');
+    }
+
+    function onVideoPause() {
+        console.log('Video is paused');
+    }
+
+    function onVideoEnd() {
+        console.log('Video has ended');
+    }
 </script>
-
 </body>
 </html>
