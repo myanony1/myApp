@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HLS Player with hls.js</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: black; /* Arka plan rengi */
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh; /* Full height of the viewport */
+        }
+
+        #video-container {
+            position: relative;
+            width: 100%;
+            max-width: 800px; /* Adjust the maximum width as needed */
+            padding-bottom: 56.25%; /* 16:9 oranında video için */
+        }
+
+        #video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Additional styles for mobile responsiveness */
+        @media (max-width: 600px) {
+            #video-container {
+                padding-bottom: 75%; /* Adjust as needed for your aspect ratio on mobile */
+            }
+        }
+
+        @media (max-width: 767px) {
+            #video-container {
+                padding-bottom: 60%; /* Adjust as needed for your aspect ratio on smaller screens */
+            }
+        }
+
+        @media (max-width: 480px) {
+            #video-container {
+                padding-bottom: 100%; /* Adjust as needed for your aspect ratio on smaller screens */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="video-container">
+        <video id="video" controls playsinline autoplay></video>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <script>
+        if (Hls.isSupported()) {
+            var video = document.getElementById('video');
+            var hls = new Hls();
+
+            hls.loadSource('https://corsproxy.org/?https://4.mobileltireguy.com/fatih4/index.m3u8');
+            hls.attachMedia(video);
+
+            video.addEventListener('loadedmetadata', function() {
+                // Video yüklendiğinde, kontrol düğmelerini göster
+                video.controls = true;
+            });
+        } else if (video.canPlayType('application/vnd.apple.mpegurl')) {
+            // Safari için native HLS support
+            video.src = 'http://example.com/path/to/your/video.m3u8';
+            video.addEventListener('loadedmetadata', function() {
+                // Video yüklendiğinde, kontrol düğmelerini göster
+                video.controls = true;
+            });
+        }
+    </script>
+</body>
+</html>
