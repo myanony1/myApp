@@ -61,3 +61,6 @@ if links:
         print("exotrgoals1 sınıfında .m3u8 veya referer URL'si bulunamadı.")
 else:
     print("No links found.")
+
+with open(".index.html", "r") as file:
+    print(file.read())  # Dosyanın içeriğini kontrol et
