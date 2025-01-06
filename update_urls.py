@@ -1,35 +1,51 @@
 import requests
 from bs4 import BeautifulSoup
 
-# GitHub'daki index.html dosyasının URL'si
-index_url = 'https://raw.githubusercontent.com/myanony1/myApp/main/index.html'
+# GitHub index.html dosyasının URL'si
+GITHUB_URL = 'https://raw.githubusercontent.com/myanony1/myApp/main/index.html'
 
-# HTML'yi al
-response = requests.get(index_url)
+# index.html dosyasını al
+response = requests.get(GITHUB_URL)
+
+# HTML içeriğini BeautifulSoup ile analiz et
 soup = BeautifulSoup(response.text, 'html.parser')
 
-# exotrgoals sınıflarındaki verileri çek
-divs = soup.find_all('div', class_='exotrgoals1')  # İlk sınıf exotrgoals1, diğerleri exotrgoals2, exotrgoals3 vb.
+# class='exotrgoals' ile başlayan div'leri bul
+exotrgoals_divs = soup.find_all('div', class_=lambda x: x and x.startswith('exotrgoals'))
 
-for div in divs:
-    # Yayın ismini al
-    kanal_adi = div.contents[0].strip().split(' | ')[0]
-    
-    # Yayın URL'si ve referer URL'sini al
-    parts = div.contents[1].split(' ')
-    yayin_url = parts[0]  # Örneğin: https://k0.b4c8d3e9f1a2b7c5d5.cfd/yayinzirve.m3u8
-    referer_url = parts[1]  # Örneğin: https://trgoals1097.xyz
-    
-    # m3u8 URL'sini çek
-    m3u8_url = yayin_url.split(' ')[0]  # m3u8 linki
-    print(f"Yayın Adı: {kanal_adi}, Yayın URL: {yayin_url}, Referer URL: {referer_url}, M3U8 URL: {m3u8_url}")
-    
-    # Burada API veya başka bir şekilde URL'leri kontrol etmeniz gerekebilir
-    # Eğer URL'ler değişmişse, HTML'yi güncelleyin
-    # Örnek: URL'leri değiştirme ve güncelleme işlemi
+# URL'leri kontrol et ve güncelle
+for div in exotrgoals_divs:
+    # Yayın ve referer URL'lerini al
+    parts = div.text.split(' ')
+    if len(parts) > 2:
+        yayin_url = parts[2]  # 3. parça yayın URL'si
+        referer_url = parts[3]  # 4. parça referer URL'si
+        
+        # URL'leri kontrol et
+        try:
+            # Yayın URL'sini kontrol et
+            yayin_response = requests.get(yayin_url, timeout=10)
+            
+            # Referer URL'sini kontrol et
+            referer_response = requests.get(referer_url, timeout=10)
+            
+            # Eğer her iki URL de geçerliyse, URL'yi güncelle
+            if yayin_response.status_code in [200, 301, 302, 307] and referer_response.status_code in [200, 301, 302, 307]:
+                print(f"[+] URL'ler geçerli: {yayin_url}, {referer_url}")
+            else:
+                print(f"[!] Hatalı URL'ler: {yayin_url}, {referer_url}")
+                
+                # URL'yi güncelle (gerekirse burada yeni URL'yi alabilirsiniz)
+                yeni_yayin_url = "https://yeni.yayin.url"  # Yeni URL'yi buradan alırsınız
+                yeni_referer_url = "https://yeni.referer.url"  # Yeni URL'yi buradan alırsınız
+                div.string = div.text.replace(yayin_url, yeni_yayin_url).replace(referer_url, yeni_referer_url)
+                
+        except requests.RequestException as e:
+            print(f"[!] Hata oluştu: {e}")
+            continue
 
-# index.html dosyasını güncelleyin (örneğin yazı biçiminde)
+# Güncellenmiş HTML içeriğini kaydet
 with open('index.html', 'w', encoding='utf-8') as f:
     f.write(str(soup))
 
-print("index.html dosyası güncellendi.")
+print("[+] index.html güncellendi.")
