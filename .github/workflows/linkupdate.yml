@@ -37,10 +37,10 @@ jobs:
         git config --global user.name "ActionBot"
         git config --global user.email "actionbot@example.com"
 
-    - name: Clean git cache
+    - name: Clean git cache and add changes
       run: |
         git rm --cached .index.html  # Dosyayı git cache'den çıkar
-        git add .index.html  # Yeniden ekle
+        git add -A  # Tüm değişiklikleri ekle
 
     - name: Commit and Push changes
       run: |
