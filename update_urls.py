@@ -44,14 +44,14 @@ if links:
         updated_html = soup.prettify()
 
         # Güncellenmiş HTML dosyasını kaydet
-        with open(".index.html", "w") as file:
+        with open("index.html", "w") as file:
             file.write(updated_html)
 
         # Git işlemleri
         import subprocess
         subprocess.run(["git", "config", "--global", "user.name", "ActionBot"])
         subprocess.run(["git", "config", "--global", "user.email", "actionbot@example.com"])
-        subprocess.run(["git", "add", ".index.html"])
+        subprocess.run(["git", "add", "index.html"])
         subprocess.run(["git", "commit", "-m", "Updated m3u8 and referer URLs"])
         subprocess.run(["git", "push"])
     else:
