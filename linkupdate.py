@@ -1,5 +1,6 @@
 import requests
 from lxml import html
+import subprocess
 
 # URL'yi çekmek için bit.ly adresi
 target_url = "https://bit.ly/m/taraftarium24hdizle"
@@ -15,6 +16,7 @@ links = tree.xpath('//a[@class="links"]/@href')
 
 if links:
     first_link = links[0]
+    
     # Yönlendirme URL'sine git ve gerçek URL'yi al
     redirect_response = requests.get(first_link, allow_redirects=True)
     referer_url = redirect_response.url  # Yönlendirilmiş URL'yi al
@@ -35,12 +37,16 @@ if links:
         # Güncellenmiş HTML dosyasını kaydet
         with open(".index.html", "w") as file:
             file.write(updated_html)
-
+        
         # Git işlemleri
-        import subprocess
         subprocess.run(["git", "config", "--global", "user.name", "ActionBot"])
         subprocess.run(["git", "config", "--global", "user.email", "actionbot@example.com"])
         subprocess.run(["git", "add", ".index.html"])
+        
+        # Git status kontrolü
+        status_result = subprocess.run(["git", "status", "-s"], capture_output=True, text=True)
+        print("Git Status:", status_result.stdout)  # Değişikliklerin olup olmadığını kontrol et
+
         subprocess.run(["git", "commit", "-m", "Updated referer URL via GitHub Actions"])
         subprocess.run(["git", "push"])
     else:
