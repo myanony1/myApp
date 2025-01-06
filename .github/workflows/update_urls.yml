@@ -33,6 +33,6 @@ jobs:
 
     - name: Commit changes
       run: |
-        git add .index.html
+        git add index.html
         git commit -m "Updated m3u8 and referer URLs via GitHub Actions" || echo "No changes to commit"
         git push || echo "No changes to push"
