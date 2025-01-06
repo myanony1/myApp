@@ -2,42 +2,37 @@ name: Update m3u8 and Referer URLs
 
 on:
   schedule:
-    - cron: '0 */3 * * *'  # Her 3 saatte bir çalışacak
-    workflow_dispatch: # Manuel tetikleme için ekleme
-  push:
-    branches:
-      - main  # Ana branch'ta bir değişiklik olduğunda çalışacak
+    - cron: "0 */3 * * *" # Her 3 saatte bir tetikleme
+  workflow_dispatch: # Manuel tetikleme için ekleme
 
 jobs:
-  update_urls:
+  update-index:
     runs-on: ubuntu-latest
-    
+
     steps:
-    # Reposunu klonla
     - name: Checkout repository
-      uses: actions/checkout@v2
-    
-    # Python ve pip kurulumu
-    - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/checkout@v3
+
+    - name: Setup Python
+      uses: actions/setup-python@v4
       with:
-        python-version: '3.x'
-    
-    # Gerekli Python kütüphanelerini yükle
+        python-version: 3.x # Geçerli bir Python sürümü
+
     - name: Install dependencies
       run: |
-        pip install requests beautifulsoup4
-    
-    # Python scriptini çalıştır
-    - name: Run update script
-      run: |
-        python update_urls.py
-    
-    # Git işlemleri (GitHub Actions botu üzerinden yapılacak)
-    - name: Commit and push changes
+        python -m pip install --upgrade pip
+        pip install beautifulsoup4 requests
+
+    - name: Run Python script
+      run: python your_script.py
+
+    - name: Configure Git
       run: |
         git config --global user.name "GitHub Action Bot"
         git config --global user.email "actionbot@example.com"
+
+    - name: Commit changes
+      run: |
         git add .index.html
-        git commit -m "Update m3u8 and referer URLs"
-        git push
+        git commit -m "Updated m3u8 and referer URLs via GitHub Actions" || echo "No changes to commit"
+        git push || echo "No changes to push"
