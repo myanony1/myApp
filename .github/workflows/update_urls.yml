@@ -24,7 +24,7 @@ jobs:
         pip install beautifulsoup4 requests
 
     - name: Run Python script
-      run: python your_script.py
+      run: python update_urls.py
 
     - name: Configure Git
       run: |
