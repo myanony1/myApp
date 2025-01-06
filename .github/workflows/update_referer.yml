@@ -36,5 +36,5 @@ jobs:
           git config --global user.name "GitHub Actions"
           git config --global user.email "actionbot@example.com"
           git add .index.html
-          git commit -m "Updated referer URL via GitHub Actions"
+          git diff --quiet || git commit -m "Updated referer URL via GitHub Actions"
           git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/myanony1/myApp.git
