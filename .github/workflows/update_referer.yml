@@ -2,19 +2,17 @@ name: Update Referer URL
 
 on:
   schedule:
-    # Bu işlem her 3 saatte bir tetiklenecek şekilde ayarlanmıştır
     - cron: '0 */3 * * *'
-  workflow_dispatch:  # Manuel olarak tetiklenebilmesi için
+  workflow_dispatch:
   push:
     branches:
-      - main  # Main branşına yapılan her push sonrası çalışacak
+      - main
 
 jobs:
   update_referer_url:
     runs-on: ubuntu-latest
 
     steps:
-      # GitHub repository'sine gerekli Python ortamını kuruyoruz
       - name: Checkout code
         uses: actions/checkout@v3
 
@@ -30,6 +28,12 @@ jobs:
       - name: Run Python script
         run: |
           python linkupdate.py
+
+      - name: Check git status
+        run: git status
+
+      - name: Check changes
+        run: git diff .index.html
 
       - name: Commit and push changes
         run: |
