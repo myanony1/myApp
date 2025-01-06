@@ -2,16 +2,15 @@ name: Update Referer URL
 
 on:
   schedule:
-    # Bu satır 5 dakikada bir çalışmasını sağlar
     - cron: '*/5 * * * *'  # Her 5 dakikada bir çalıştırılır
-  workflow_dispatch:  # manuel tetikleme için
+  workflow_dispatch:
   push:
     branches:
-      - main  # main branch'ına push yapıldığında da tetiklenebilir
+      - main
 
 jobs:
   update_referer_url:
-    runs-on: ubuntu-latest  # Ubuntu üzerinde çalışacak
+    runs-on: ubuntu-latest
 
     steps:
     - name: Check out the repository
@@ -20,23 +19,30 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v2
       with:
-        python-version: '3.9'  # Python 3.9 sürümünü kullan
+        python-version: '3.9'
 
     - name: Install dependencies
       run: |
-        pip install requests lxml  # Gerekli kütüphaneleri yükle
+        pip install requests lxml
 
     - name: Run Python script
       run: |
-        python linkupdate.py  # Python dosyanızı çalıştırın
+        python linkupdate.py
+
+    - name: Check git status
+      run: git status -s  # Değişiklik olup olmadığını kontrol et
 
     - name: Set up Git
       run: |
-        git config --global user.name "ActionBot"  # GitHub Action için kullanıcı adı
-        git config --global user.email "actionbot@example.com"  # GitHub Action için e-posta adresi
+        git config --global user.name "ActionBot"
+        git config --global user.email "actionbot@example.com"
+
+    - name: Clean git cache
+      run: |
+        git rm --cached .index.html  # Dosyayı git cache'den çıkar
+        git add .index.html  # Yeniden ekle
 
     - name: Commit and Push changes
       run: |
-        git add .index.html  # Değişiklikleri ekle
-        git commit -m "Updated referer URL via GitHub Actions"  # Commit mesajı
-        git push  # Değişiklikleri GitHub'a gönder
+        git commit -m "Updated referer URL via GitHub Actions"
+        git push
