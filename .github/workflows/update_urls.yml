@@ -16,7 +16,7 @@ jobs:
     - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: 3.x # Geçerli bir Python sürümü
+        python-version: 3.14 # Geçerli bir Python sürümü
 
     - name: Install dependencies
       run: |
