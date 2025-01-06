@@ -1,0 +1,40 @@
+name: Update Referer URL
+
+on:
+  schedule:
+    # Bu işlem her 3 saatte bir tetiklenecek şekilde ayarlanmıştır
+    - cron: '0 */3 * * *'
+  workflow_dispatch:  # Manuel olarak tetiklenebilmesi için
+  push:
+    branches:
+      - main  # Main branşına yapılan her push sonrası çalışacak
+
+jobs:
+  update_referer_url:
+    runs-on: ubuntu-latest
+
+    steps:
+      # GitHub repository'sine gerekli Python ortamını kuruyoruz
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.x'
+
+      - name: Install dependencies
+        run: |
+          pip install requests lxml
+
+      - name: Run Python script
+        run: |
+          python update_referer_url.py
+
+      - name: Commit and push changes
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actionbot@example.com"
+          git add .index.html
+          git commit -m "Updated referer URL via GitHub Actions"
+          git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/myanony1/myApp.git
