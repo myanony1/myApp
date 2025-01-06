@@ -29,3 +29,5 @@ jobs:
     - name: Run Python script
       run: |
         python linkupdate.py  # Python dosyanızı çalıştırın
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub Token'ı ekle
