@@ -4,7 +4,7 @@ on:
   schedule:
     # Bu satır 5 dakikada bir çalışmasını sağlar
     - cron: '*/5 * * * *'  # Her 5 dakikada bir çalıştırılır
-  workflow_dispatch:  # Manuel tetikleme için
+  workflow_dispatch:  # manuel tetikleme için
   push:
     branches:
       - main  # main branch'ına push yapıldığında da tetiklenebilir
@@ -29,5 +29,14 @@ jobs:
     - name: Run Python script
       run: |
         python linkupdate.py  # Python dosyanızı çalıştırın
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub Token'ı ekle
+
+    - name: Set up Git credentials
+      run: |
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actionbot@example.com"
+
+    - name: Commit and push changes
+      run: |
+        git add .index.html  # Değişiklikleri ekle
+        git commit -m "Updated referer URL via GitHub Actions" || echo "No changes to commit"
+        git push https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/myanony1/myApp.git
