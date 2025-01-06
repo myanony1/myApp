@@ -1,7 +1,7 @@
 import requests
 from lxml import html
-import os
 import subprocess
+import os
 
 # URL'yi çekmek için bit.ly adresi
 target_url = "https://bit.ly/m/taraftarium24hdizle"
@@ -46,22 +46,25 @@ if links:
             print(".index.html dosyası bulunamadı.")
         
         # Git işlemleri
-        subprocess.run(["git", "config", "--global", "user.name", "ActionBot"])
+        subprocess.run(["git", "config", "--global", "user.name", "GitHub Actions"])
         subprocess.run(["git", "config", "--global", "user.email", "actionbot@example.com"])
 
-        # Git cache temizleme ve değişiklikleri ekleme
-        subprocess.run(["git", "rm", "--cached", ".index.html"])  # Dosyayı git cache'den çıkar
-        subprocess.run(["git", "add", "-A"])  # Tüm değişiklikleri ekle
+        # Değişiklikleri ekle
+        subprocess.run(["git", "add", ".index.html"])
 
         # Git status kontrolü
         status_result = subprocess.run(["git", "status", "-s"], capture_output=True, text=True)
         print("Git Status:", status_result.stdout)  # Değişikliklerin olup olmadığını kontrol et
 
         # Değişiklikleri commit et
-        subprocess.run(["git", "commit", "-m", "Updated referer URL via GitHub Actions"])
-        
+        commit_result = subprocess.run(["git", "commit", "-m", "Updated referer URL via GitHub Actions"], capture_output=True, text=True)
+        if commit_result.returncode != 0:
+            print("Commit işlemi başarısız:", commit_result.stderr)
+        else:
+            print("Commit başarılı.")
+
         # Değişiklikleri push et
-        subprocess.run(["git", "push"])
+        subprocess.run(["git", "push", "https://x-access-token:${GITHUB_TOKEN}@github.com/myanony1/myApp.git", "main"])
     else:
         print("exotrgoals1 sınıfı bulunamadı.")
 else:
