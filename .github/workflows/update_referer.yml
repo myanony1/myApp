@@ -3,7 +3,7 @@ name: Update Referer
 on:
   schedule:
     - cron: '*/30 * * * *'  # 30 dakikada bir çalışacak.
-
+workflow_dispatch:  # Manuel tetikleme için
 jobs:
   update-urls:
     runs-on: ubuntu-latest
