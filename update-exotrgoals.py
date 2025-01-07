@@ -6,40 +6,32 @@ import subprocess
 def fetch_redirected_url():
     try:
         # URL'yi al
-        url = "https://bit.ly/m/taraftarium24hdizle"
-        response = requests.get(url)
-        response.raise_for_status()  # Hata kontrolü
+url = "https://bit.ly/m/taraftarium24hdizle"
+response = requests.get(url)
 
-        # Sayfayı parse et
-        soup = BeautifulSoup(response.text, 'html.parser')
+# Sayfayı parse et
+soup = BeautifulSoup(response.text, 'html.parser')
 
-        # .links class'ı altındaki ilk bağlantıyı bul
-        first_link = soup.select_one('.links a')['href']
-        print(f"First link: {first_link}")
+# .links class'ı altındaki ilk bağlantıyı bul
+first_link = soup.select_one('.links a')['href']
 
-        return first_link
-    except Exception as e:
-        print(f"URL alımı sırasında hata oluştu: {e}")
-        return None
+# İstenilen URL'yi yazdır
+print(f"First link: {first_link}")
 
-# .index.html dosyasını güncelle
-def update_html_file(new_url):
-    file_path = ".index.html"
-    try:
-        with open(file_path, "r", encoding="utf-8") as file:
-            content = file.read()
+# .index.html dosyasını aç ve içeriğini oku
+with open('.index.html', 'r', encoding='utf-8') as file:
+    html = file.read()
 
-        # trgoals ile başlayan URL'yi bul ve yeni URL ile değiştir
-        updated_content = content.replace(
-            'trgoals', new_url
-        )
+# .index.html dosyasındaki 'trgoals' içeren URL'yi ilk bağlantıyla değiştir
+new_html = html.replace('trgoals', first_link)
 
-        with open(file_path, "w", encoding="utf-8") as file:
-            file.write(updated_content)
-
-        print(".index.html güncellendi.")
-    except Exception as e:
-        print(f".index.html güncellenirken hata oluştu: {e}")
+# Eğer değişiklik yapıldıysa, dosyayı güncelle
+if new_html != html:
+    with open('.index.html', 'w', encoding='utf-8') as file:
+        file.write(new_html)
+    print("HTML file updated successfully.")
+else:
+    print("No changes to .index.html.")
 
 # Git ile değişiklikleri gönder
 def commit_and_push_changes():
