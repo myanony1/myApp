@@ -2,28 +2,32 @@ name: Update m3u8 Link
 
 on:
   schedule:
-    - cron: '0 */3 * * *'  # Her 3 saatte bir çalışır
-  workflow_dispatch:  # Manuel tetikleme için
+    - cron: "0 */3 * * *"  # Her 3 saatte bir çalışır
+  workflow_dispatch:  # Manuel tetikleme seçeneği
 
 jobs:
   update-m3u8:
     runs-on: ubuntu-latest
 
     steps:
+    # 1. Depoyu klonla
     - name: Checkout repository
       uses: actions/checkout@v3
 
-    - name: Set up Python
+    # 2. Gerekli bağımlılıkları yükle
+    - name: Setup Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'
+        python-version: 3.9
 
     - name: Install dependencies
       run: |
-        pip install requests beautifulsoup4 selenium gitpython
+        python -m pip install --upgrade pip
+        pip install requests beautifulsoup4 selenium GitPython
 
-    - name: Run script
+    # 3. Python scriptini çalıştır
+    - name: Run Python script
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Push için gerekli
       run: |
         python urlupdate.py
