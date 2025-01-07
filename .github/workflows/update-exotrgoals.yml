@@ -20,7 +20,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        pip install requests beautifulsoup4  # Gerekli Python paketlerini yükle
+        python -m pip install --upgrade pip
+          pip install -U setuptools wheel Kekik httpx parsel
 
     - name: Run the update script
       run: |
@@ -34,7 +35,7 @@ jobs:
         # Dosyada değişiklik olup olmadığını kontrol et
         if git diff --quiet; then
           echo "No changes to commit"
-        else:
+        else
           git add .index.html
           git commit -m "Update .index.html with new URL"
           git push
