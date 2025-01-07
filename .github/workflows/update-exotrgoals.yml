@@ -34,8 +34,7 @@ jobs:
         # Dosyada değişiklik olup olmadığını kontrol et
         if git diff --quiet; then
           echo "No changes to commit"
-        else
+        else:
           git add .index.html
           git commit -m "Update .index.html with new URL"
           git push
-        fi
