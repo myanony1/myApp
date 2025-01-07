@@ -5,15 +5,19 @@ import subprocess
 # Verilen URL'den yeni bağlantıyı al
 def fetch_redirected_url():
     try:
-        response = requests.get("https://bit.ly/m/taraftarium24hdizle", allow_redirects=True)
-        response.raise_for_status()
+        # URL'yi al
+        url = "https://bit.ly/m/taraftarium24hdizle"
+        response = requests.get(url)
+        response.raise_for_status()  # Hata kontrolü
+
+        # Sayfayı parse et
         soup = BeautifulSoup(response.text, 'html.parser')
-        link = soup.select_one(".links a")
-        if link and link['href']:
-            return link['href']
-        else:
-            print("Bağlantı bulunamadı.")
-            return None
+
+        # .links class'ı altındaki ilk bağlantıyı bul
+        first_link = soup.select_one('.links a')['href']
+        print(f"First link: {first_link}")
+
+        return first_link
     except Exception as e:
         print(f"URL alımı sırasında hata oluştu: {e}")
         return None
