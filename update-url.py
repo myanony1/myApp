@@ -24,20 +24,22 @@ if response.status_code == 200:
         updated_html = re.sub(r"(https://[^\s]+)", referer_url, html_content)
 
         # Güncellenmiş içeriği dosyaya yaz
-        with open('.index.html', 'w', encoding='utf-8') as file:
-            file.write(updated_html)
+        if updated_html != html_content:  # Eğer içerik değiştiyse
+            with open('.index.html', 'w', encoding='utf-8') as file:
+                file.write(updated_html)
 
-        print("Referer URL başarıyla güncellendi.")
-        
-        # Git işlemleri: Değişiklikleri kaydet ve push et
-        try:
-            # Git çalışma dizininde olduğumuzu varsayalım
-            subprocess.run(['git', 'add', '.index.html'], check=True)
-            subprocess.run(['git', 'commit', '-m', 'Update referer URL in .index.html'], check=True)
-            subprocess.run(['git', 'push'], check=True)
-            print("Değişiklikler GitHub'a başarıyla push edildi.")
-        except subprocess.CalledProcessError as e:
-            print(f"Git işlemi başarısız oldu: {e}")
+            print("Referer URL başarıyla güncellendi.")
+            
+            # Git işlemleri: Değişiklikleri kaydet ve push et
+            try:
+                subprocess.run(['git', 'add', '.index.html'], check=True)
+                subprocess.run(['git', 'commit', '-m', 'Update referer URL in .index.html'], check=True)
+                subprocess.run(['git', 'push'], check=True)
+                print("Değişiklikler GitHub'a başarıyla push edildi.")
+            except subprocess.CalledProcessError as e:
+                print(f"Git işlemi başarısız oldu: {e}")
+        else:
+            print("İçerik değişmedi, commit yapılacak bir değişiklik yok.")
     else:
         print("trgoals içeren bir http-referrer URL bulunamadı.")
 else:
