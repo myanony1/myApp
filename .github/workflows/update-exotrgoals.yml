@@ -1,33 +1,33 @@
-name: Update Exotrgoals URL
+name: Update .index.html
 
 on:
   schedule:
-    - cron: "0 */3 * * *" # Her 3 saatte bir çalıştırır
-  workflow_dispatch: # Manuel tetikleme için
+    - cron: "0 */3 * * *" # Her 3 saatte bir çalışır
+  workflow_dispatch: # Manuel tetikleme
 
 jobs:
-  update-url:
+  update-html:
     runs-on: ubuntu-latest
 
     steps:
-      # Repository'yi klonla
-      - name: Checkout Repository
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      # Python kurulumunu yap
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: "3.9"
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: "3.9"
 
-      # Gereksinimleri yükle
-      - name: Install Dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install requests beautifulsoup4
+    - name: Install dependencies
+      run: pip install beautifulsoup4 requests
 
-      # Scripti çalıştır
-      - name: Run Update Script
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: python update_exotrgoals.py
+    - name: Run Python script
+      run: python update_exotrgoals.py
+
+    - name: Push changes
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        git config --global user.name "github-actions[bot]"
+        git config --global user.email "github-actions[bot]@users.noreply.github.com"
+        git push origin main
