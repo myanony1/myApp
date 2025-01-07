@@ -3,7 +3,7 @@ name: Update Referer URL and Push
 on:
   push:
     branches:
-      - main  # Ana dalınıza bağlı olarak değiştirin
+      - main  # Ana dalınıza bağlı olarak değiştirebilirsiniz
 
 jobs:
   update-referer:
@@ -25,12 +25,15 @@ jobs:
 
       - name: Run Python script to update .index.html
         run: |
-          python update-url.py  # Python betiğinizin adını buraya yazın
+          python update_referer.py  # Python betiğinizin adı
 
-      - name: Commit and Push changes
+      - name: Configure Git user
         run: |
           git config --global user.name "${{ github.actor }}"
           git config --global user.email "${{ github.actor }}@users.noreply.github.com"
+
+      - name: Commit and Push changes
+        run: |
           git add .index.html
           git commit -m "Update referer URL in .index.html"
           git push
