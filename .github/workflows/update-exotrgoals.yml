@@ -1,33 +1,35 @@
-name: Update .index.html
+name: Update exotrgoals URL
 
 on:
   schedule:
-    - cron: "0 */3 * * *" # Her 3 saatte bir çalışır
-  workflow_dispatch: # Manuel olarak çalıştırmak için
+    - cron: "0 */3 * * *"  # Her 3 saatte bir çalışacak
+  workflow_dispatch:  # Manuel tetikleme desteği (gerekirse)
 
 jobs:
-  update-html:
+  update-exotrgoals:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v3
+      uses: actions/checkout@v2
 
     - name: Set up Python
-      uses: actions/setup-python@v4
+      uses: actions/setup-python@v2
       with:
-        python-version: "3.9"
+        python-version: '3.9'  # Python 3.9 kullanıyoruz
 
     - name: Install dependencies
-      run: pip install beautifulsoup4 requests
+      run: |
+        pip install requests beautifulsoup4  # Gerekli Python paketlerini yükle
 
-    - name: Run Python script
-      run: python update-exotrgoals.py
+    - name: Run the update script
+      run: |
+        python update-exotrgoals.py  # Python dosyasını çalıştır
 
-    - name: Push changes
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Commit changes to .index.html
       run: |
         git config --global user.name "github-actions[bot]"
         git config --global user.email "github-actions[bot]@users.noreply.github.com"
-        git push origin main
+        git add .index.html
+        git commit -m "Update .index.html with new URL"
+        git push
