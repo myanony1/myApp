@@ -1,0 +1,33 @@
+name: Update Exotrgoals URL
+
+on:
+  schedule:
+    - cron: "0 */3 * * *" # Her 3 saatte bir çalıştırır
+  workflow_dispatch: # Manuel tetikleme için
+
+jobs:
+  update-url:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Repository'yi klonla
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      # Python kurulumunu yap
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      # Gereksinimleri yükle
+      - name: Install Dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      # Scripti çalıştır
+      - name: Run Update Script
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: python update_exotrgoals.py
