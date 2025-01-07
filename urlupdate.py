@@ -14,3 +14,11 @@ def trgoals_domaini_al(self):
         redirect_url = self.redirect_gec(redirect_url)
 
     return redirect_url
+
+try:
+    with open('urls.html', 'a') as file:
+        file.write(f'<a href="{final_redirected_url}">{final_redirected_url}</a>\n')
+        print(f'URL added: {final_redirected_url}')
+except Exception as e:
+    print(f"Error writing to file: {e}")
+
