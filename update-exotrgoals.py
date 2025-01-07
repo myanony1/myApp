@@ -9,25 +9,30 @@ response = requests.get(url)
 soup = BeautifulSoup(response.text, 'html.parser')
 
 # .links class'ı altındaki ilk bağlantıyı bul
-first_link = soup.select_one('.links a')['href']
+link_element = soup.select_one('.links a')
 
-# İstenilen URL'yi yazdır
-print(f"First link: {first_link}")
+# Bağlantı bulunup bulunmadığını kontrol et
+if link_element and link_element.get('href'):
+    first_link = link_element['href']
+    print(f"First link: {first_link}")
 
-# .index.html dosyasını aç ve içeriğini oku
-with open('.index.html', 'r', encoding='utf-8') as file:
-    html = file.read()
+    # .index.html dosyasını aç ve içeriğini oku
+    with open('.index.html', 'r', encoding='utf-8') as file:
+        html = file.read()
 
-# .index.html dosyasındaki 'trgoals' içeren URL'yi ilk bağlantıyla değiştir
-new_html = html.replace('trgoals', first_link)
+    # .index.html dosyasındaki 'trgoals' içeren URL'yi ilk bağlantıyla değiştir
+    new_html = html.replace('trgoals', first_link)
 
-# Eğer değişiklik yapıldıysa, dosyayı güncelle
-if new_html != html:
-    with open('.index.html', 'w', encoding='utf-8') as file:
-        file.write(new_html)
-    print("HTML file updated successfully.")
+    # Eğer değişiklik yapıldıysa, dosyayı güncelle
+    if new_html != html:
+        with open('.index.html', 'w', encoding='utf-8') as file:
+            file.write(new_html)
+        print("HTML file updated successfully.")
+    else:
+        print("No changes to .index.html.")
 else:
-    print("No changes to .index.html.")
+    print("No link found in the .links class.")
+
 
 # Git ile değişiklikleri gönder
 def commit_and_push_changes():
