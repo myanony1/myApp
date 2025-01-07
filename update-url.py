@@ -19,7 +19,8 @@ if not referer_url:
     raise ValueError("Referer URL bulunamadı!")
 
 # .index.html dosyasını aç ve içeriğini yükle
-html_file = "path/to/kindex.html"  # .index.html dosyasının doğru yolu
+html_file = "./kindex.html"  # .index.html dosyasının doğru yolu
+
 with open(html_file, 'r') as file:
     soup = BeautifulSoup(file, 'html.parser')
 
