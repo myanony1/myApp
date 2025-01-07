@@ -1,35 +1,47 @@
 import requests
-import re
+from bs4 import BeautifulSoup
 
-# URL'yi al
-url = "https://raw.githubusercontent.com/keyiflerolsun/IPTV_YenirMi/main/Kanallar/KekikAkademi.m3u"
-response = requests.get(url)
+# M3U dosyasındaki referer URL'sini çek
+m3u_url = "https://raw.githubusercontent.com/keyiflerolsun/IPTV_YenirMi/main/Kanallar/KekikAkademi.m3u"
+response = requests.get(m3u_url)
 
-# Eğer başarılı bir yanıt aldıysak
-if response.status_code == 200:
-    content = response.text
+# M3U dosyasının içeriğini al
+m3u_content = response.text
 
-    # "http-referrer" satırındaki ve "trgoals" içeren URL'yi bul
-    match = re.search(r"#EXTVLCOPT:http-referrer=(https://[^\s]+trgoals[^\s]+)", content)
-    if match:
-        referer_url = match.group(1)
+# "http-referrer=" içeren satırı bul
+referer_url = None
+for line in m3u_content.splitlines():
+    if line.startswith("#EXTVLCOPT:http-referrer="):
+        referer_url = line.split("=")[1]
+        break
 
-        # .index.html dosyasını oku
-        with open('.index.html', 'r', encoding='utf-8') as file:
-            html_content = file.read()
+if not referer_url:
+    raise ValueError("Referer URL bulunamadı!")
 
-        # .index.html içeriğindeki referer URL'yi güncelle
-        updated_html = re.sub(r"(https://[^\s]+)", referer_url, html_content)
+# .index.html dosyasını aç ve içeriğini yükle
+html_file = "path/to/kindex.html"  # .index.html dosyasının doğru yolu
+with open(html_file, 'r') as file:
+    soup = BeautifulSoup(file, 'html.parser')
 
-        # Güncellenmiş içeriği dosyaya yaz
-        if updated_html != html_content:  # Eğer içerik değiştiyse
-            with open('kindex.html', 'w', encoding='utf-8') as file:
-                file.write(updated_html)
+# .index.html dosyasındaki 'exotrgoals1' sınıfı içindeki div'i bul
+div = soup.find('div', class_='exotrgoals1')
 
-            print("Referer URL başarıyla güncellendi.")
-        else:
-            print("İçerik değişmedi, commit yapılacak bir değişiklik yok.")
-    else:
-        print("trgoals içeren bir http-referrer URL bulunamadı.")
+if div:
+    # Div'in içindeki metni al ve URL'yi güncelle
+    text = div.get_text()
+    parts = text.split(" ")
+    
+    # .m3u8 URL'sinin sonrasındaki referer URL'yi değiştir
+    for i, part in enumerate(parts):
+        if part.endswith(".m3u8"):
+            parts[i + 1] = referer_url  # Sonraki öğe referer URL'si olacak
+            break
+
+    # Yeniden güncellenmiş metni div içinde düzenle
+    div.string = " ".join(parts)
+
+    # Güncellenmiş HTML'yi kaydet
+    with open(html_file, 'w') as file:
+        file.write(str(soup))
 else:
-    print(f"URL'yi alırken hata oluştu: {response.status_code}")
+    raise ValueError("exotrgoals1 sınıfına sahip div bulunamadı!")
