@@ -3,9 +3,11 @@ from bs4 import BeautifulSoup
 
 # URL'yi al
 url = "https://bit.ly/m/taraftarium24hdizle"
+print(f"Getting URL: {url}")
 response = requests.get(url)
 
 # Sayfayı parse et
+print("Parsing the response...")
 soup = BeautifulSoup(response.text, 'html.parser')
 
 # .links class'ı altındaki ilk bağlantıyı bul
@@ -14,22 +16,27 @@ link_element = soup.select_one('.links a')
 # Bağlantı bulunup bulunmadığını kontrol et
 if link_element and link_element.get('href'):
     first_link = link_element['href']
-    print(f"First link: {first_link}")
+    print(f"First link found: {first_link}")
 
     # .index.html dosyasını aç ve içeriğini oku
-    with open('.index.html', 'r', encoding='utf-8') as file:
-        html = file.read()
+    try:
+        with open('.index.html', 'r', encoding='utf-8') as file:
+            html = file.read()
+        print("Successfully read .index.html")
 
-    # .index.html dosyasındaki 'trgoals' içeren URL'yi ilk bağlantıyla değiştir
-    new_html = html.replace('trgoals', first_link)
+        # .index.html dosyasındaki 'trgoals' içeren URL'yi ilk bağlantıyla değiştir
+        new_html = html.replace('trgoals', first_link)
 
-    # Eğer değişiklik yapıldıysa, dosyayı güncelle
-    if new_html != html:
-        with open('.index.html', 'w', encoding='utf-8') as file:
-            file.write(new_html)
-        print("HTML file updated successfully.")
-    else:
-        print("No changes to .index.html.")
+        # Eğer değişiklik yapıldıysa, dosyayı güncelle
+        if new_html != html:
+            with open('.index.html', 'w', encoding='utf-8') as file:
+                file.write(new_html)
+            print(".index.html updated successfully.")
+        else:
+            print("No changes to .index.html.")
+
+    except FileNotFoundError:
+        print(".index.html not found.")
 else:
     print("No link found in the .links class.")
 
