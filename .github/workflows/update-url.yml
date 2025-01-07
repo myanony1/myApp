@@ -1,8 +1,8 @@
-name: Update URL in index.html
+name: Update trgoals URLs in index.html
 
 on:
   schedule:
-    - cron: '0 */3 * * *'  # 3 saatte bir çalışacak (her 3 saatte bir)
+    - cron: '0 */3 * * *'  # 3 saatte bir çalışacak
   workflow_dispatch:  # Manuel tetikleme için eklenebilir
 
 jobs:
@@ -21,6 +21,6 @@ jobs:
         run: |
           pip install requests
 
-      - name: Fetch new URL and update index.html
+      - name: Fetch new URLs and update index.html
         run: |
           python update-url.py
