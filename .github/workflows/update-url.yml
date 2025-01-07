@@ -4,6 +4,14 @@ on:
   push:
     branches:
       - main  # Ana dalınıza bağlı olarak değiştirebilirsiniz
+  schedule:
+    - cron: '0 */3 * * *'  # Her 3 saatte bir çalışacak
+  workflow_dispatch:
+    inputs:
+      trigger:
+        description: 'Manuel güncelleme'
+        required: true
+        default: 'true'
 
 jobs:
   update-referer:
@@ -25,7 +33,11 @@ jobs:
 
       - name: Run Python script to update .index.html
         run: |
-          python update-url.py  # Python betiğinizin adı
+          python update_referer.py  # Python betiğinizin adı
+
+      - name: Check for changes in .index.html
+        run: |
+          git diff .index.html
 
       - name: Configure Git user
         run: |
