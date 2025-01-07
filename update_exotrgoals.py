@@ -1,26 +1,25 @@
 import requests
 from bs4 import BeautifulSoup
-import base64
-import subprocess
 import os
+import subprocess
 
-# URL'den bağlantıyı al ve yönlendir
-def fetch_new_url():
+# Verilen URL'den yeni bağlantıyı al
+def fetch_redirected_url():
     try:
         response = requests.get("https://bit.ly/m/taraftarium24hdizle", allow_redirects=True)
         response.raise_for_status()
         soup = BeautifulSoup(response.text, 'html.parser')
-        link_element = soup.select_one(".links a")
-        if link_element and link_element['href']:
-            return link_element['href']
+        link = soup.select_one(".links a")
+        if link and link['href']:
+            return link['href']
         else:
-            print("No valid link found in .links class.")
+            print("Bağlantı bulunamadı.")
             return None
     except Exception as e:
-        print(f"Error fetching URL: {e}")
+        print(f"URL alımı sırasında hata oluştu: {e}")
         return None
 
-# Dosyayı güncelle
+# .index.html dosyasını güncelle
 def update_html_file(new_url):
     file_path = ".index.html"
     try:
@@ -35,25 +34,25 @@ def update_html_file(new_url):
         with open(file_path, "w") as file:
             file.write(updated_content)
 
-        print("File updated successfully.")
+        print(".index.html güncellendi.")
     except Exception as e:
-        print(f"Error updating file: {e}")
+        print(f".index.html güncellenirken hata oluştu: {e}")
 
-# Git işlemleri
+# Git ile değişiklikleri gönder
 def commit_and_push_changes():
     try:
         subprocess.run(["git", "config", "--global", "user.name", "github-actions[bot]"])
         subprocess.run(["git", "config", "--global", "user.email", "github-actions[bot]@users.noreply.github.com"])
         subprocess.run(["git", "add", ".index.html"])
-        subprocess.run(["git", "commit", "-m", "Update .index.html via workflow"])
-        subprocess.run(["git", "push", "origin", "main"])
-        print("Changes pushed to repository.")
+        subprocess.run(["git", "commit", "-m", "Update .index.html with new URL"])
+        subprocess.run(["git", "push"])
+        print("Değişiklikler başarıyla gönderildi.")
     except Exception as e:
-        print(f"Error committing and pushing changes: {e}")
+        print(f"Git işlemleri sırasında hata oluştu: {e}")
 
-# Main
+# Ana iş akışı
 if __name__ == "__main__":
-    new_url = fetch_new_url()
+    new_url = fetch_redirected_url()
     if new_url:
         update_html_file(new_url)
         commit_and_push_changes()
