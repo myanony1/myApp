@@ -1,30 +1,45 @@
-import requests
-from parsel import Selector
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.options import Options
+import time
 
 def trgoals_domaini_al():
     try:
-        # İlk isteği gönder
-        istek = requests.get("https://bit.ly/m/taraftarium24hdizle")
-        
-        # HTML analiz etmek için Selector kullan
-        secici = Selector(istek.text)
-        
-        # İlk bağlantıyı almak için XPath ifadesini kullan
-        first_link = secici.xpath("//section[@class='links']/a[1]/@href").get()
+        # Chrome options ayarları
+        options = Options()
+        options.add_argument('--headless')  # Tarayıcıyı başlatmadan çalıştır
+        driver = webdriver.Chrome(options=options)
 
-        # Bağlantıyı kontrol et
-        if not first_link:
-            raise ValueError("İlk bağlantı alınamadı.")
+        # Web sayfasına git
+        driver.get("https://bit.ly/m/taraftarium24hdizle")
         
-        print(f"İlk bağlantı URL'si: {first_link}")
-        
-        return first_link
-    except Exception as e:
-        raise ValueError(f"Yönlendirme URL'si alınırken hata oluştu: {e}")
+        # Sayfanın yüklenmesi için birkaç saniye bekle
+        time.sleep(3)
 
-if __name__ == "__main__":
-    try:
-        final_url = trgoals_domaini_al()
-        print(f"Son yönlendirme URL'si: {final_url}")
+        # İlk butona tıklamak için butonun XPath'ini kullan
+        first_button = driver.find_element(By.XPATH, "//section[@class='links']/a[1]")
+        first_button.click()
+
+        # Yönlendirme sonrası sayfanın tamamen yüklenmesi için bekle
+        time.sleep(3)
+
+        # Şu anki URL'yi al
+        final_url = driver.current_url
+
+        print(f"Yönlendirme URL'si: {final_url}")
+        
+        # Tarayıcıyı kapat
+        driver.quit()
+
+        return final_url
     except Exception as e:
         print(f"Hata: {e}")
+        driver.quit()  # Tarayıcıyı kapatmayı unutma
+        return None
+
+if __name__ == "__main__":
+    final_url = trgoals_domaini_al()
+    if final_url:
+        print(f"Son yönlendirme URL'si: {final_url}")
+    else:
+        print("Bir hata oluştu.")
