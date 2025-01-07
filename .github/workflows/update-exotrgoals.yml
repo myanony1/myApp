@@ -1,5 +1,3 @@
-# Bu araç @keyiflerolsun tarafından | @KekikAkademi için yazılmıştır.
-
 name: Domain Değişiklik Kontrolü
 
 concurrency:
@@ -13,8 +11,7 @@ on:
 
 jobs:
   DomainKontrol:
-    #runs-on: ubuntu-latest
-    runs-on: self-hosted
+    runs-on: ubuntu-latest  # self-hosted yerine GitHub'un sağladığı ortam
 
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -54,6 +51,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add -A
-          git commit --author="keyiflerolsun <keyiflerolsun@users.noreply.github.com>" \
+          git commit --author="myAnony1 <myanony1@users.noreply.github.com>" \
             -m "♻️ Domain Değişikliği" -m "💾 Önceki » $GITHUB_SHA"
           git push
