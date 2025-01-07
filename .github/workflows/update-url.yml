@@ -37,7 +37,15 @@ jobs:
 
       - name: Check for changes in .index.html
         run: |
-          git diff .index.html
+          git status  # Değişikliklerin varlığını kontrol etmek için
+
+      - name: Force update of .index.html timestamp
+        run: |
+          touch .index.html  # Dosyanın son değiştirilme zamanını güncelle
+
+      - name: Check for changes again in .index.html
+        run: |
+          git diff .index.html  # Değişiklik olup olmadığını kontrol et
 
       - name: Configure Git user
         run: |
