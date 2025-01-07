@@ -1,4 +1,4 @@
-name: Update URLs from Redirects
+name: Fetch Redirected URL
 
 on:
   push:
@@ -16,16 +16,16 @@ jobs:
     - name: Install Python dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install requests beautifulsoup4
+        pip install httpx parsel
 
-    - name: Fetch redirected URL and update urls.html
+    - name: Fetch redirected URL
       run: |
         python urlupdate.py
 
     - name: Commit and push changes
       run: |
-        git config --global user.name "GitHub Actions Bot"
-        git config --global user.email "actions@github.com"
+        git config --global user.name 'GitHub Actions Bot'
+        git config --global user.email 'actions@github.com'
         git add urls.html
         git commit -m "Updated redirected URL"
         git push origin main
