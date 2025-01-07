@@ -3,7 +3,7 @@ name: Update .index.html
 on:
   schedule:
     - cron: "0 */3 * * *" # Her 3 saatte bir çalışır
-  workflow_dispatch: # Manuel tetikleme
+  workflow_dispatch: # Manuel olarak çalıştırmak için
 
 jobs:
   update-html:
@@ -22,7 +22,7 @@ jobs:
       run: pip install beautifulsoup4 requests
 
     - name: Run Python script
-      run: python update_exotrgoals.py
+      run: python update-exotrgoals.py
 
     - name: Push changes
       env:
