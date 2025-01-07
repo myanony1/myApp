@@ -12,7 +12,7 @@ m3u_content = response.text
 m3u_urls = re.findall(r'https?://[^\s]+trgoals[^\s]+', m3u_content)
 
 # index.html dosyasını aç ve URL'leri değiştir
-index_file_path = 'index.html'
+index_file_path = '.index.html'
 
 with open(index_file_path, 'r') as file:
     html_content = file.read()
