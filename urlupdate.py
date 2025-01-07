@@ -16,6 +16,8 @@ def get_redirected_url(base_url):
 def get_final_url(initial_url):
     options = Options()
     options.add_argument('--headless')
+    options.add_argument('--no-sandbox')
+    options.add_argument('--disable-dev-shm-usage')
     driver = webdriver.Chrome(options=options)
     driver.get(initial_url)
     final_url = driver.current_url
@@ -48,7 +50,7 @@ def update_github_repo(m3u8_link, repo_path, file_path, commit_message):
 # Ana işlem
 if __name__ == "__main__":
     base_url = "https://bit.ly/m/taraftarium24hdizle"
-    repo_path = "/path/to/your/local/repo"  # Yerel repo yolu
+    repo_path = "."  # GitHub Actions için çalışma dizini
     file_path = "urls.html"  # GitHub'daki dosya yolu
 
     try:
