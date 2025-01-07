@@ -23,7 +23,7 @@ if response.status_code == 200:
 
         # Güncellenmiş içeriği dosyaya yaz
         if updated_html != html_content:  # Eğer içerik değiştiyse
-            with open('.index.html', 'w', encoding='utf-8') as file:
+            with open('kindex.html', 'w', encoding='utf-8') as file:
                 file.write(updated_html)
 
             print("Referer URL başarıyla güncellendi.")
