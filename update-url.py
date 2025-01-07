@@ -1,5 +1,7 @@
 import requests
 import re
+import os
+import subprocess
 
 # URL'yi al
 url = "https://raw.githubusercontent.com/keyiflerolsun/IPTV_YenirMi/main/Kanallar/KekikAkademi.m3u"
@@ -26,6 +28,16 @@ if response.status_code == 200:
             file.write(updated_html)
 
         print("Referer URL başarıyla güncellendi.")
+        
+        # Git işlemleri: Değişiklikleri kaydet ve push et
+        try:
+            # Git çalışma dizininde olduğumuzu varsayalım
+            subprocess.run(['git', 'add', '.index.html'], check=True)
+            subprocess.run(['git', 'commit', '-m', 'Update referer URL in .index.html'], check=True)
+            subprocess.run(['git', 'push'], check=True)
+            print("Değişiklikler GitHub'a başarıyla push edildi.")
+        except subprocess.CalledProcessError as e:
+            print(f"Git işlemi başarısız oldu: {e}")
     else:
         print("trgoals içeren bir http-referrer URL bulunamadı.")
 else:
