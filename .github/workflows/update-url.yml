@@ -1,0 +1,26 @@
+name: Update URL in index.html
+
+on:
+  schedule:
+    - cron: '0 */3 * * *'  # 3 saatte bir çalışacak (her 3 saatte bir)
+  workflow_dispatch:  # Manuel tetikleme için eklenebilir
+
+jobs:
+  update-url:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.9'
+
+      - name: Install dependencies
+        run: |
+          pip install requests
+
+      - name: Fetch new URL and update index.html
+        run: |
+          python update-url.py
