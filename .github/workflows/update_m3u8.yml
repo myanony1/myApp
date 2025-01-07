@@ -1,37 +1,38 @@
-name: Update m3u8 Link
+name: Scrape M3U8 Link and Update GitHub
 
 on:
+  push:
+    branches:
+      - main  # Ana branch'e push yapıldığında tetiklenir
   schedule:
-    - cron: "0 */3 * * *" # Her 3 saatte bir çalışır
-  workflow_dispatch: # Manuel olarak da tetiklenebilir
+    - cron: "0 */3 * * *"  # Her 3 saatte bir çalışacak
 
 jobs:
-  update-link:
-    runs-on: ubuntu-latest
+  scrape_m3u8:
+    runs-on: ubuntu-latest  # Ubuntu üzerinde çalıştırılacak
+
     steps:
-      - name: Depoyu klonla
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v2  # Repo'yu çek
 
-      - name: Python'ı kur
-        uses: actions/setup-python@v4
+      - name: Set up Python
+        uses: actions/setup-python@v2
         with:
-          python-version: '3.x'
+          python-version: '3.8'  # Kullanılacak Python sürümü
 
-      - name: Gereksinimleri yükle
-        run: pip install requests parsel
-
-      - name: m3u8 linkini al ve dosyayı oluştur
+      - name: Install dependencies
         run: |
-          python urlupdate.py > m3u8_link.txt
-          m3u8_link=$(cat m3u8_link.txt)
-          echo $m3u8_link > urls.html
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt  # Gerekli kütüphaneleri yükle
 
-      - name: Değişiklikleri commit ve push et
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run scraper script
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          python scraper.py  # Python betiğini çalıştır
+
+      - name: Commit and push M3U8 link to GitHub
+        run: |
+          git config --global user.name "GitHub Actions Bot"
+          git config --global user.email "actions@github.com"
           git add urls.html
-          git commit -m "Update m3u8 link"
+          git commit -m "Update M3U8 link"
           git push
