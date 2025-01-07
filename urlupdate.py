@@ -25,6 +25,13 @@ def trgoals_domaini_al():
         # İlk yönlendirme linkini al
         redirect_url = secici.xpath("(//section[@class='links']/a)[1]/@href").get()
         
+        # XPath ile alınan linki kontrol et
+        print(f"Redirect URL: {redirect_url}")
+        
+        # Eğer redirect_url None ise hata verir
+        if not redirect_url:
+            raise ValueError("Yönlendirme URL'si alınamadı.")
+        
         # Yönlendirme çözülene kadar devam et
         while "bit.ly" in redirect_url:
             redirect_url = redirect_gec(redirect_url)
