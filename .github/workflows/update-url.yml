@@ -42,11 +42,11 @@ jobs:
 
       - name: Force update of kindex.html timestamp
         run: |
-          touch .index2.html  # Dosyanın son değiştirilme zamanını güncelle
+          touch index2.html  # Dosyanın son değiştirilme zamanını güncelle
 
       - name: Check for changes in .index.html again
         run: |
-          git diff .index2.html  # Değişiklik olup olmadığını kontrol et
+          git diff index2.html  # Değişiklik olup olmadığını kontrol et
 
       - name: Configure Git user
         run: |
@@ -55,7 +55,7 @@ jobs:
 
       - name: Commit and Push changes
         run: |
-          git add .index2.html
+          git add index2.html
           git commit -m "Update referer URL in kindex.html"
           git push
         env:
