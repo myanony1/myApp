@@ -9,10 +9,10 @@ response = requests.get(url)
 if response.status_code == 200:
     content = response.text
 
-    # "trgoals" içeren URL'yi bul
-    match = re.search(r"https://[^\s]+trgoals[^\s]+", content)
+    # "http-referrer" satırındaki ve "trgoals" içeren URL'yi bul
+    match = re.search(r"#EXTVLCOPT:http-referrer=(https://[^\s]+trgoals[^\s]+)", content)
     if match:
-        referer_url = match.group(0)
+        referer_url = match.group(1)
 
         # .index.html dosyasını oku
         with open('.index.html', 'r', encoding='utf-8') as file:
@@ -27,6 +27,6 @@ if response.status_code == 200:
 
         print("Referer URL başarıyla güncellendi.")
     else:
-        print("trgoals içeren bir URL bulunamadı.")
+        print("trgoals içeren bir http-referrer URL bulunamadı.")
 else:
     print(f"URL'yi alırken hata oluştu: {response.status_code}")
