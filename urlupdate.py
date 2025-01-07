@@ -1,30 +1,16 @@
-import requests
-from bs4 import BeautifulSoup
+import httpx
+from parsel import Selector
 
-# Başlangıç URL'si (URL dinamik parametreler içeriyor)
-start_url = "https://bit.ly/m/taraftarium24hdizle"
-
-# İlk URL'yi al
-response = requests.get(start_url)
-
-# HTML içeriğini parse et
-soup = BeautifulSoup(response.text, 'html.parser')
-
-# URL'yi içeren <a> etiketini bul
-link_tag = soup.find('a', href=True)
-
-# Eğer link mevcutsa
-if link_tag:
-    final_url = link_tag['href']
+def trgoals_domaini_al(self):
+    # URL'yi istek ile alıyoruz
+    istek = httpx.get("https://bit.ly/m/taraftarium24hdizle")  # bit.ly üzerinden yönlendirme yapılacak
+    secici = Selector(istek.text)
     
-    # Yönlendirilen URL'yi alın
-    response_final = requests.get(final_url, allow_redirects=True)
-    final_redirected_url = response_final.url  # En son yönlendirilmiş URL
-    
-    # URLs'i urls.html dosyasına yaz
-    with open('urls.html', 'a') as file:
-        file.write(f'<a href="{final_redirected_url}">{final_redirected_url}</a>\n')
+    # İlk bağlantıyı alıyoruz
+    redirect_url = secici.xpath("(//section[@class='links']/a)[1]/@href").get()
 
-    print(f"Yönlendirilen URL: {final_redirected_url}")
-else:
-    print("Yönlendirme linki bulunamadı.")
+    # Eğer bit.ly içeren bir URL varsa, yönlendirmeyi takip ediyoruz
+    while "bit.ly" in redirect_url:
+        redirect_url = self.redirect_gec(redirect_url)
+
+    return redirect_url
