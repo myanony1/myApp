@@ -8,7 +8,7 @@ response = requests.get(m3u_url)
 new_url = response.text.strip()  # Eğer m3u dosyasındaki URL metinse, bunu alıyoruz
 
 # index.html dosyasını aç ve URL'yi değiştir
-index_file_path = 'index.html'
+index_file_path = '.index.html'
 
 with open(index_file_path, 'r') as file:
     html_content = file.read()
