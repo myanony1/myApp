@@ -33,7 +33,7 @@ jobs:
 
       - name: Run Python script to update .index.html
         run: |
-          python update_referer.py  # Python betiğinizin adı
+          python update-url.py  # Python betiğinizin adı
 
       - name: Check for changes in .index.html
         run: |
