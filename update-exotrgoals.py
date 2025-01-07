@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-import os
 import subprocess
 
 # Verilen URL'den yeni bağlantıyı al
@@ -23,15 +22,15 @@ def fetch_redirected_url():
 def update_html_file(new_url):
     file_path = ".index.html"
     try:
-        with open(file_path, "r") as file:
+        with open(file_path, "r", encoding="utf-8") as file:
             content = file.read()
 
+        # trgoals ile başlayan URL'yi bul ve yeni URL ile değiştir
         updated_content = content.replace(
-            next((line for line in content.splitlines() if "exotrgoals1" in line and "trgoals" in line), ""),
-            f'<div class="exotrgoals1">{new_url}</div>'
+            'trgoals', new_url
         )
 
-        with open(file_path, "w") as file:
+        with open(file_path, "w", encoding="utf-8") as file:
             file.write(updated_content)
 
         print(".index.html güncellendi.")
@@ -41,13 +40,13 @@ def update_html_file(new_url):
 # Git ile değişiklikleri gönder
 def commit_and_push_changes():
     try:
-        subprocess.run(["git", "config", "--global", "user.name", "github-actions[bot]"])
-        subprocess.run(["git", "config", "--global", "user.email", "github-actions[bot]@users.noreply.github.com"])
-        subprocess.run(["git", "add", ".index.html"])
-        subprocess.run(["git", "commit", "-m", "Update .index.html with new URL"])
-        subprocess.run(["git", "push"])
+        subprocess.run(["git", "config", "--global", "user.name", "github-actions[bot]"], check=True)
+        subprocess.run(["git", "config", "--global", "user.email", "github-actions[bot]@users.noreply.github.com"], check=True)
+        subprocess.run(["git", "add", ".index.html"], check=True)
+        subprocess.run(["git", "commit", "-m", "Update .index.html with new URL"], check=True)
+        subprocess.run(["git", "push"], check=True)
         print("Değişiklikler başarıyla gönderildi.")
-    except Exception as e:
+    except subprocess.CalledProcessError as e:
         print(f"Git işlemleri sırasında hata oluştu: {e}")
 
 # Ana iş akışı
