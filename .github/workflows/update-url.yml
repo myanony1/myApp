@@ -1,26 +1,28 @@
-name: Update trgoals URLs in index.html
+name: Update Referer URL
 
 on:
   schedule:
-    - cron: '0 */3 * * *'  # 3 saatte bir çalışacak
-  workflow_dispatch:  # Manuel tetikleme için eklenebilir
+    - cron: "0 */3 * * *"  # Her 3 saatte bir çalışacak
+  workflow_dispatch: # Manuel olarak da tetiklenebilir
 
 jobs:
-  update-url:
+  update-referer:
     runs-on: ubuntu-latest
+
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+    - name: Checkout repository
+      uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.9'
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
 
-      - name: Install dependencies
-        run: |
-          pip install requests
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install requests
 
-      - name: Fetch new URLs and update index.html
-        run: |
-          python update-url.py
+    - name: Run Python script to update referer
+      run: |
+        python update-url.py  # Python betiği dosyanızın adı
