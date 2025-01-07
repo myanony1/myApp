@@ -5,11 +5,23 @@ import re
 m3u_url = 'https://raw.githubusercontent.com/keyiflerolsun/IPTV_YenirMi/main/Kanallar/KekikAkademi.m3u'
 response = requests.get(m3u_url)
 
-# M3U dosyasındaki URL'leri al
+# M3U dosyasındaki içerik
 m3u_content = response.text
 
-# M3U dosyasındaki trgoals içeren URL'leri bul
-m3u_urls = re.findall(r'https?://[^\s]+trgoals[^\s]+', m3u_content)
+# Dosyanın içeriğini yazdırarak kontrol edin
+print("M3U Dosyasının İçeriği:")
+print(m3u_content)
+
+# trgoals içeren URL'leri bulmak için daha esnek bir regex kullanıyoruz
+m3u_urls = re.findall(r'https?://[^\s]+trgoals[^\s]*', m3u_content)
+
+# M3U dosyasındaki bulunan URL'leri yazdır
+if m3u_urls:
+    print("\ntrgoals içeren URL'ler:")
+    for url in m3u_urls:
+        print(url)
+else:
+    print("trgoals içeren URL bulunamadı.")
 
 # index.html dosyasını aç ve URL'leri değiştir
 index_file_path = '.index.html'
@@ -18,7 +30,7 @@ with open(index_file_path, 'r') as file:
     html_content = file.read()
 
 # .index.html dosyasındaki trgoals içeren URL'leri bul
-html_urls = re.findall(r'https?://[^\s]+trgoals[^\s]+', html_content)
+html_urls = re.findall(r'https?://[^\s]+trgoals[^\s]*', html_content)
 
 # Eğer trgoals içeren URL'ler varsa, bunları M3U dosyasındaki URL'lerle değiştir
 if html_urls:
