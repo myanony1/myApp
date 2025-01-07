@@ -1,11 +1,7 @@
 import requests
 from bs4 import BeautifulSoup
-import subprocess
 
-# Verilen URL'den yeni bağlantıyı al
-def fetch_redirected_url():
-    try:
-        # URL'yi al
+# URL'yi al
 url = "https://bit.ly/m/taraftarium24hdizle"
 response = requests.get(url)
 
