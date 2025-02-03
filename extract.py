@@ -20,15 +20,15 @@ driver = webdriver.Chrome(options=chrome_options)
 target_url = "https://trgoals1150.xyz/"
 driver.get(target_url)
 
-# 1️⃣ .player-poster.clickable öğesine tıklama
+# 1️⃣ <svg> öğesine tıklama (class="poster-icon")
 try:
-    poster = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, ".player-poster.clickable"))
+    svg_element = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CLASS_NAME, "poster-icon"))
     )
-    ActionChains(driver).move_to_element(poster).click().perform()
-    print("✅ .player-poster.clickable tıklandı.")
+    ActionChains(driver).move_to_element(svg_element).click().perform()
+    print("✅ SVG öğesine tıklandı.")
 except Exception as e:
-    print("❌ .player-poster.clickable tıklanamadı:", e)
+    print("❌ SVG öğesi tıklanamadı:", e)
 
 # 2️⃣ 7 saniye bekle
 WebDriverWait(driver, 7).until(lambda driver: True)  # 7 saniye bekletme
