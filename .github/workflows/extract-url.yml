@@ -15,28 +15,34 @@ jobs:
 
     - name: Fetch and process URL
       run: |
-        CONTENT=$(curl -sL -A "Mozilla/5.0" --ssl-no-revoke https://sonbahistv5.pages.dev)
+        # Hata ayıklama için curl çıktısını kaydet
+        curl -vL -A "Mozilla/5.0" https://sonbahistv5.pages.dev -o response.txt 2> curl-debug.log
         
-        # Daha kesin regex patterni
+        # SSL hatası kontrolü
+        if [ $? -ne 0 ]; then
+          echo "CURL HATASI: SSL/TLS problemi olabilir"
+          cat curl-debug.log
+          exit 1
+        fi
+
+        CONTENT=$(cat response.txt)
         M3U8_URL=$(echo "$CONTENT" | grep -Eo 'https?://[^"'\'']+\.m3u8' | head -1)
 
-        # URL kontrolü
+        # Debug çıktıları
+        echo "Response Length: ${#CONTENT}"
+        echo "Extracted URL: $M3U8_URL"
+        
         if [ -z "$M3U8_URL" ]; then
-          echo "HATA: .m3u8 URL'si bulunamadı!" > urls.html
+          echo "HATA: .m3u8 URL'si bulunamadı! İçerik örneği:"
+          head -n 100 response.txt
           exit 1
         fi
 
         # HTML oluşturma
         echo "<!DOCTYPE html>
         <html>
-        <head>
-            <title>M3U8 URLs</title>
-            <meta charset=\"UTF-8\">
-        </head>
         <body>
-            <a href=\"$M3U8_URL\">$M3U8_URL</a>
-            <hr>
-            <div>Son Güncelleme: $(date +'%Y-%m-%d %H:%M:%S')</div>
+            <a href=\"$M3U8_URL\">$(date +'%Y-%m-%d %H:%M')</a>
         </body>
         </html>" > urls.html
 
@@ -45,5 +51,5 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
         git add urls.html
-        git commit -m "Update M3U8 URL: $(date +'%Y-%m-%d %H:%M:%S')" || echo "Değişiklik yok, commit atlanıyor."
+        git commit -m "Update: $(date +'%H:%M')" || echo "Değişiklik yok."
         git push
