@@ -7,38 +7,38 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Chrome seçeneklerini ayarlıyoruz
+# Chrome seçeneklerini ayarla
 chrome_options = Options()
 chrome_options.add_argument('--headless')  # Arka planda çalıştır
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
-# ChromeDriver'ı başlatıyoruz
+# ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
 target_url = "https://trgoals1150.xyz/"
 driver.get(target_url)
 
-# "player-poster clickable" div'ine tıklamak için bekliyoruz
+# "player-poster" div'ine tıklamayı dene
 try:
     poster = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, ".player-poster[data-poster].clickable"))
+        EC.element_to_be_clickable((By.CLASS_NAME, "player-poster"))
     )
     ActionChains(driver).move_to_element(poster).click().perform()
     print("Player poster'ına tıklandı.")
 except Exception as e:
     print("Player poster butonu bulunamadı veya tıklanamadı:", e)
 
-# Videonun yüklenmesini beklemek için 20 saniye bekleyelim
+# 20 saniye bekle
 print("Video yükleniyor, 20 saniye bekleniyor...")
 time.sleep(20)
 
-# Chrome performance loglarını çekiyoruz
+# Chrome performans loglarını çek
 logs = driver.get_log("performance")
 
-# ".m3u8" içeren URL'leri toplamak için bir set oluşturuyoruz
+# ".m3u8" içeren URL'leri bul
 m3u8_urls = set()
 
 for entry in logs:
@@ -50,11 +50,11 @@ for entry in logs:
             if ".m3u8" in response_url:
                 m3u8_urls.add(response_url)
     except Exception:
-        pass  # Log işlenirken hata olursa yoksay
+        pass  # Hataları yoksay
 
 driver.quit()
 
-# Bulunan URL'leri urls.html dosyasına yazıyoruz
+# Bulunan URL'leri urls.html dosyasına yaz
 with open("urls.html", "w", encoding="utf-8") as f:
     f.write("<html><body>\n")
     for url in m3u8_urls:
