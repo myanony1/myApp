@@ -73,7 +73,7 @@ for entry in logs:
         message = log_json.get("message", {})
         if message.get("method") == "Network.responseReceived":
             response_url = message.get("params", {}).get("response", {}).get("url", "")
-            if ".m3u8" in response_url:
+            if ".m3u8" in response_url and "yayın1.m3u8" in response_url:
                 m3u8_urls.add(response_url)
     except Exception:
         pass  # Hataları yoksay
