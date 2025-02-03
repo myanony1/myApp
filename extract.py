@@ -22,9 +22,8 @@ driver.get(target_url)
 
 # 1️⃣ Sayfanın tamamen yüklenmesini beklemek (sayfa yükleme durumu)
 try:
-    # Sayfanın tamamen yüklendiğini doğrulamak için <body> öğesinin varlığını kontrol et
     WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.TAG_NAME, "body"))  # Sayfa tamamen yüklendiğinde <body> öğesinin görünür olması gerekir
+        EC.presence_of_element_located((By.TAG_NAME, "body"))
     )
     print("✅ Sayfa tamamen yüklendi.")
 except Exception as e:
@@ -39,12 +38,12 @@ except Exception as e:
 
 # 3️⃣ <div id="player"> öğesinin tıklanabilir olmasını bekle
 try:
-    # Öğenin tıklanabilir olmasını bekle
     player_div = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.ID, "player"))
     )
-    # JavaScript ile tıklama (bazen normal tıklama yerine bu yöntem daha etkili olabilir)
-    driver.execute_script("arguments[0].click();", player_div)
+    # Sayfa kaydırma işlemi yapılır, ardından öğeyi tıklamak için JavaScript kullanılır
+    driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
+    driver.execute_script("arguments[0].click();", player_div)  # JavaScript ile tıklama
     print("✅ <div id='player'> öğesine tıklandı.")
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
