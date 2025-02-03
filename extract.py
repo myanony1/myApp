@@ -20,18 +20,18 @@ driver = webdriver.Chrome(options=chrome_options)
 target_url = "https://trgoals1150.xyz/"
 driver.get(target_url)
 
-# 1️⃣ <svg> öğesine tıklama (class="poster-icon")
+# 1️⃣ .player-poster.clickable öğesine tıklama
 try:
-    svg_element = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CLASS_NAME, "poster-icon"))
+    player_poster = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CLASS_NAME, "player-poster.clickable"))
     )
-    ActionChains(driver).move_to_element(svg_element).click().perform()
-    print("✅ SVG öğesine tıklandı.")
+    ActionChains(driver).move_to_element(player_poster).click().perform()
+    print("✅ .player-poster.clickable tıklandı.")
 except Exception as e:
-    print("❌ SVG öğesi tıklanamadı:", e)
+    print("❌ .player-poster.clickable tıklanamadı:", e)
 
 # 2️⃣ 7 saniye bekle
-WebDriverWait(driver, 7).until(lambda driver: True)  # 7 saniye bekletme
+WebDriverWait(driver, 10).until(lambda driver: True)  # 7 saniye bekletme
 
 # 3️⃣ "REKLAMI GEC" butonuna tıklama
 try:
