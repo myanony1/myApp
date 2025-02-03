@@ -17,14 +17,14 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
-target_url = "https://trgoals1150.xyz"
+target_url = "https://trgoals1150.xyz/"
 driver.get(target_url)
 
-# 1️⃣ Sayfa tamamen yüklendiğinde video oynatıcı öğesini bekle
+# 1️⃣ Sayfanın tamamen yüklenmesini beklemek (sayfa yükleme durumu)
 try:
-    # Sayfa yüklenmesini beklemek için uygun bir öğe seçiyoruz
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.ID, "player"))  # player öğesinin yüklenmesini bekliyoruz
+    # Sayfanın tamamen yüklendiğini doğrulamak için <body> öğesinin varlığını kontrol et
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.TAG_NAME, "body"))  # Sayfa tamamen yüklendiğinde <body> öğesinin görünür olması gerekir
     )
     print("✅ Sayfa tamamen yüklendi.")
 except Exception as e:
