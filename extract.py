@@ -19,7 +19,7 @@ driver.get(target_url)
 
 # Reklamın tamamlanmasını ve asıl video linkinin yüklenmesini beklemek için 30 saniye bekle
 print("Reklamın geçmesini bekliyoruz...")
-time.sleep(30)
+time.sleep(20)
 
 # Chrome performance loglarını çekiyoruz
 logs = driver.get_log("performance")
