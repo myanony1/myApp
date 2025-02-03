@@ -22,8 +22,18 @@ jobs:
       run: |
         pip install selenium webdriver-manager
 
-    - name: Set up ChromeDriver
-      uses: machawk1/chromedriver-action@v2
+    - name: Install Google Chrome
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y google-chrome-stable
+
+    - name: Install ChromeDriver
+      run: |
+        CHROME_VERSION=$(google-chrome-stable --version | sed 's/Google Chrome //')
+        wget https://chromedriver.storage.googleapis.com/$(echo $CHROME_VERSION | sed 's/\./_/g')/chromedriver_linux64.zip
+        unzip chromedriver_linux64.zip
+        sudo mv chromedriver /usr/local/bin/chromedriver
+        sudo chmod +x /usr/local/bin/chromedriver
 
     - name: Run Python script
       run: |
