@@ -20,21 +20,15 @@ driver = webdriver.Chrome(options=chrome_options)
 target_url = "https://trgoals1150.xyz/"
 driver.get(target_url)
 
-# 1️⃣ Sayfa tamamen yüklendikten sonra <div class="player-poster clickable"> öğesine tıklama
+# 1️⃣ <div id="player"> öğesine tıklama
 try:
-    # Sayfanın tamamen yüklenmesini bekleyelim
-    WebDriverWait(driver, 20).until(
-        EC.presence_of_element_located((By.CLASS_NAME, "player-poster"))
+    player_div = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.ID, "player"))
     )
-    
-    # .player-poster.clickable öğesine tıklama
-    player_poster = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//div[@class='player-poster clickable']"))
-    )
-    ActionChains(driver).move_to_element(player_poster).click().perform()
-    print("✅ .player-poster.clickable tıklandı.")
+    ActionChains(driver).move_to_element(player_div).click().perform()
+    print("✅ <div id='player'> öğesine tıklandı.")
 except Exception as e:
-    print("❌ .player-poster.clickable tıklanamadı:", e)
+    print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
 # 2️⃣ 7 saniye bekle
 WebDriverWait(driver, 7).until(lambda driver: True)  # 7 saniye bekletme
