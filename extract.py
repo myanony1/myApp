@@ -23,10 +23,10 @@ driver.get(target_url)
 
 # "player-poster clickable" div'ine tıklamak için bekliyoruz
 try:
-    poster_icon = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, "//*[name()='svg' and contains(@class, 'poster-icon')]"))
-     )
-ActionChains(driver).move_to_element(poster_icon).click().perform()
+    poster = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, ".player-poster.clickable"))
+    )
+    ActionChains(driver).move_to_element(poster).click().perform()
     print("Player poster'ına tıklandı.")
 except Exception as e:
     print("Player poster butonu bulunamadı veya tıklanamadı:", e)
