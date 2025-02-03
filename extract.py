@@ -16,11 +16,11 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 # ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
-# Hedef URL'yi aç
-target_url = "https://trgoals1150.xyz/"
-driver.get(target_url)
+# 1️⃣ Başlangıç URL'sini aç
+starting_url = "https://bit.ly/m/taraftarium24w"
+driver.get(starting_url)
 
-# 1️⃣ Sayfanın tamamen yüklenmesini beklemek (sayfa yükleme durumu)
+# Sayfa tamamen yüklenene kadar bekle
 try:
     WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.TAG_NAME, "body"))
@@ -29,29 +29,34 @@ try:
 except Exception as e:
     print("❌ Sayfa yüklenemedi:", e)
 
-# 2️⃣ <a> öğesini tıklamak (logo)
+# 2️⃣ <section class="links"> içindeki ilk bağlantıya tıklamak
+try:
+    first_link = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "section.links a"))
+    )
+    first_link.click()
+    print("✅ İlk bağlantıya tıklanarak hedef sayfaya yönlendirildi.")
+except Exception as e:
+    print("❌ İlk bağlantıya tıklanamadı:", e)
+
+# 3️⃣ Hedef sayfanın tamamen yüklenmesini bekle
+try:
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.TAG_NAME, "body"))
+    )
+    print("✅ Hedef sayfa tamamen yüklendi.")
+except Exception as e:
+    print("❌ Hedef sayfa yüklenemedi:", e)
+
+# 4️⃣ a.topLogo1 öğesine tıklama
 try:
     logo_link = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "a.topLogo1"))
     )
     logo_link.click()
-    print("✅ Logo tıklanarak ana sayfaya yönlendirildi.")
+    print("✅ 'topLogo1' öğesine tıklandı.")
 except Exception as e:
-    print("❌ Logo öğesi tıklanamadı:", e)
-
-# 3️⃣ <div id="player"> öğesinin tıklanabilir olmasını bekle
-try:
-    player_div = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.ID, "player"))
-    )
-    driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
-    driver.execute_script("arguments[0].click();", player_div)  # JavaScript ile tıklama
-    print("✅ <div id='player'> öğesine tıklandı.")
-except Exception as e:
-    print("❌ <div id='player'> öğesi tıklanamadı:", e)
-
-# 4️⃣ 10 saniye bekle
-WebDriverWait(driver, 10).until(lambda driver: True)  # 10 saniye bekletme
+    print("❌ 'topLogo1' öğesi tıklanamadı:", e)
 
 # 5️⃣ "REKLAMI GEC" butonuna tıklama
 try:
