@@ -24,12 +24,16 @@ jobs:
 
       - name: Download ChromeDriver
         run: |
-          # Chrome sürümü ile uyumlu ChromeDriver versiyonunu belirlemek için
           CHROME_VERSION=$(google-chrome --version | grep -oP '\d+\.\d+\.\d+\.\d+')
           echo "Chrome version: $CHROME_VERSION"
-          # Genellikle major versiyon eşleşmesi yeterli olacaktır.
           CHROME_MAJOR=$(echo $CHROME_VERSION | cut -d '.' -f 1)
-          DRIVER_VERSION=$(curl -sS "https://chromedriver.storage.googleapis.com/LATEST_RELEASE_$CHROME_MAJOR")
+          RELEASE_URL="https://chromedriver.storage.googleapis.com/LATEST_RELEASE_${CHROME_MAJOR}"
+          HTTP_CODE=$(curl -o /dev/null -s -w "%{http_code}" "$RELEASE_URL")
+          if [ "$HTTP_CODE" -ne "200" ]; then
+            echo "Spesifik sürüm bulunamadı (HTTP $HTTP_CODE). Genel LATEST_RELEASE sürümüne geçiliyor."
+            RELEASE_URL="https://chromedriver.storage.googleapis.com/LATEST_RELEASE"
+          fi
+          DRIVER_VERSION=$(curl -sS "$RELEASE_URL")
           echo "ChromeDriver version: $DRIVER_VERSION"
           wget -q "https://chromedriver.storage.googleapis.com/${DRIVER_VERSION}/chromedriver_linux64.zip"
           unzip chromedriver_linux64.zip -d .
