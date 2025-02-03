@@ -1,4 +1,4 @@
-name: Extract m3u8 URL
+name: Extract m3u8 URL and Commit
 
 on:
   push:
@@ -43,8 +43,11 @@ jobs:
         run: |
           python extract.py
 
-      - name: Upload urls.html as artifact
-        uses: actions/upload-artifact@v4
+      - name: Commit and push urls.html if changed
+        uses: EndBug/add-and-commit@v9
         with:
-          name: urls-html
-          path: urls.html
+          add: 'urls.html'
+          message: 'Add generated urls.html'
+          # GitHub Token otomatik olarak kullanılacaktır. 
+          author_name: 'github-actions'
+          author_email: 'github-actions@github.com'
