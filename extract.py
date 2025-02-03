@@ -2,6 +2,10 @@ import time
 import json
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Chrome seçeneklerini ayarlıyoruz
 chrome_options = Options()
@@ -14,11 +18,21 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi açıyoruz
-target_url = "https://trgoals1150.xyz/"
+target_url = "https://sonbahistv5.pages.dev/"
 driver.get(target_url)
 
-# Reklamın tamamlanmasını ve asıl video linkinin yüklenmesini beklemek için 30 saniye bekle
-print("Reklamın geçmesini bekliyoruz...")
+# "Play" butonuna tıklamak için bekliyoruz
+try:
+    play_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "player-poster"))  # Buraya gerçek player butonunun selector'ünü ekleyin
+    )
+    ActionChains(driver).move_to_element(play_button).click().perform()
+    print("Play butonuna tıklandı.")
+except Exception as e:
+    print("Play butonu bulunamadı veya tıklanamadı:", e)
+
+# Videonun yüklenmesini beklemek için 20 saniye bekleyelim
+print("Video yükleniyor, 20 saniye bekleniyor...")
 time.sleep(20)
 
 # Chrome performance loglarını çekiyoruz
