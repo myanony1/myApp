@@ -1,4 +1,3 @@
-import time
 import json
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
@@ -21,24 +20,31 @@ driver = webdriver.Chrome(options=chrome_options)
 target_url = "https://trgoals1150.xyz/"
 driver.get(target_url)
 
-# "player-poster clickable" div'ine tıklamayı dene
+# 1️⃣ .player-poster.clickable öğesine tıklama
 try:
     poster = WebDriverWait(driver, 10).until(
-    EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'player-poster') and contains(@class, 'clickable')]"))
-)
+        EC.element_to_be_clickable((By.CSS_SELECTOR, ".player-poster.clickable"))
+    )
     ActionChains(driver).move_to_element(poster).click().perform()
-    print("Player poster clickable tıklandı.")
+    print("✅ .player-poster.clickable tıklandı.")
 except Exception as e:
-    print("Player poster clickable butonu bulunamadı veya tıklanamadı:", e)
+    print("❌ .player-poster.clickable tıklanamadı:", e)
 
-# 20 saniye bekle
-print("Video yükleniyor, 20 saniye bekleniyor...")
-time.sleep(20)
+# 2️⃣ 7 saniye bekle
+WebDriverWait(driver, 7).until(lambda driver: True)  # 7 saniye bekletme
 
-# Chrome performans loglarını çek
+# 3️⃣ Sayfadaki butona tıklama
+try:
+    play_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.TAG_NAME, "button"))
+    )
+    ActionChains(driver).move_to_element(play_button).click().perform()
+    print("✅ Butona tıklandı.")
+except Exception as e:
+    print("❌ Buton bulunamadı veya tıklanamadı:", e)
+
+# 4️⃣ .m3u8 linklerini çekme
 logs = driver.get_log("performance")
-
-# ".m3u8" içeren URL'leri bul
 m3u8_urls = set()
 
 for entry in logs:
@@ -54,11 +60,11 @@ for entry in logs:
 
 driver.quit()
 
-# Bulunan URL'leri urls.html dosyasına yaz
+# 5️⃣ URLs'yi urls.html dosyasına yaz
 with open("urls.html", "w", encoding="utf-8") as f:
     f.write("<html><body>\n")
     for url in m3u8_urls:
         f.write(f"<p>{url}</p>\n")
     f.write("</body></html>\n")
 
-print("Extraction complete. URLs written to urls.html")
+print("✅ Extraction complete. URLs written to urls.html")
