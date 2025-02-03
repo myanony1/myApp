@@ -33,15 +33,15 @@ except Exception as e:
 # 2️⃣ 7 saniye bekle
 WebDriverWait(driver, 7).until(lambda driver: True)  # 7 saniye bekletme
 
-# 3️⃣ Sayfadaki butona tıklama
+# 3️⃣ "REKLAMI GEC" butonuna tıklama
 try:
-    play_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.TAG_NAME, "button"))
+    skip_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEC')]"))
     )
-    ActionChains(driver).move_to_element(play_button).click().perform()
-    print("✅ Butona tıklandı.")
+    ActionChains(driver).move_to_element(skip_button).click().perform()
+    print("✅ 'REKLAMI GEC' butonuna tıklandı.")
 except Exception as e:
-    print("❌ Buton bulunamadı veya tıklanamadı:", e)
+    print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
 
 # 4️⃣ .m3u8 linklerini çekme
 logs = driver.get_log("performance")
