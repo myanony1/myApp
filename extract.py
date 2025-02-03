@@ -9,7 +9,7 @@ from selenium.webdriver.support import expected_conditions as EC
 
 # Chrome seçeneklerini ayarlıyoruz
 chrome_options = Options()
-chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')  # Arka planda çalıştır
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--no-sandbox')
 chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
@@ -17,19 +17,19 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 # ChromeDriver'ı başlatıyoruz
 driver = webdriver.Chrome(options=chrome_options)
 
-# Hedef URL'yi açıyoruz
+# Hedef URL'yi aç
 target_url = "https://trgoals1150.xyz/"
 driver.get(target_url)
 
-# "Play" butonuna tıklamak için bekliyoruz
+# "player-poster clickable" div'ine tıklamak için bekliyoruz
 try:
-    play_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "player-poster"))  # Buraya gerçek player butonunun selector'ünü ekleyin
+    poster = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CLASS_NAME, "play-wrapper"))
     )
-    ActionChains(driver).move_to_element(play_button).click().perform()
-    print("Play butonuna tıklandı.")
+    ActionChains(driver).move_to_element(poster).click().perform()
+    print("Player poster'ına tıklandı.")
 except Exception as e:
-    print("Play butonu bulunamadı veya tıklanamadı:", e)
+    print("Player poster butonu bulunamadı veya tıklanamadı:", e)
 
 # Videonun yüklenmesini beklemek için 20 saniye bekleyelim
 print("Video yükleniyor, 20 saniye bekleniyor...")
