@@ -16,7 +16,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi açıyoruz
-target_url = "https://sonbahistv5.pages.dev/"
+target_url = "https://trgoals1145.xyz/"
 driver.get(target_url)
 
 # Sayfanın yüklenmesi ve network isteklerinin tamamlanması için bekliyoruz
