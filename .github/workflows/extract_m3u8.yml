@@ -40,7 +40,7 @@ jobs:
           python extract.py
 
       - name: Upload urls.html as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: urls-html
           path: urls.html
