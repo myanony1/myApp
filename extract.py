@@ -5,7 +5,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.common.keys import Keys
 
 # Chrome seçeneklerini ayarla
 chrome_options = Options()
@@ -31,22 +30,29 @@ try:
 except Exception as e:
     print("❌ Sayfa yüklenemedi:", e)
 
-# 2️⃣ <div id="player"> öğesinin tıklanabilir olmasını bekle
+# 2️⃣ Sayfayı biraz kaydırarak öğenin tıklanabilir olduğundan emin ol
 try:
-    # Öğenin tıklanabilir olup olmadığını kontrol et
+    driver.execute_script("window.scrollTo(0, 500);")  # Sayfayı kaydırarak öğenin görünür olmasını sağla
+    print("✅ Sayfa kaydırıldı.")
+except Exception as e:
+    print("❌ Sayfa kaydırılamadı:", e)
+
+# 3️⃣ <div id="player"> öğesinin tıklanabilir olmasını bekle
+try:
+    # Öğenin tıklanabilir olmasını bekle
     player_div = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.ID, "player"))
     )
-    # Tıklama işlemi
+    # JavaScript ile tıklama (bazen normal tıklama yerine bu yöntem daha etkili olabilir)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
-# 3️⃣ 7 saniye bekle
+# 4️⃣ 7 saniye bekle
 WebDriverWait(driver, 7).until(lambda driver: True)  # 7 saniye bekletme
 
-# 4️⃣ "REKLAMI GEC" butonuna tıklama
+# 5️⃣ "REKLAMI GEC" butonuna tıklama
 try:
     skip_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEC')]"))
@@ -56,7 +62,7 @@ try:
 except Exception as e:
     print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
 
-# 5️⃣ .m3u8 linklerini çekme
+# 6️⃣ .m3u8 linklerini çekme
 logs = driver.get_log("performance")
 m3u8_urls = set()
 
@@ -73,7 +79,7 @@ for entry in logs:
 
 driver.quit()
 
-# 6️⃣ URLs'yi urls.html dosyasına yaz
+# 7️⃣ URLs'yi urls.html dosyasına yaz
 with open("urls.html", "w", encoding="utf-8") as f:
     f.write("<html><body>\n")
     for url in m3u8_urls:
