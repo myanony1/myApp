@@ -1,75 +1,35 @@
-name: Extract M3U8 URL
+name: Update m3u8 URLs
 
 on:
-  workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *'
+    - cron: '0 */3 * * *'  # Her 3 saatte bir çalışacak
+  workflow_dispatch:
 
 jobs:
-  extract-url:
+  get_m3u8_url:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
+    - name: Check out repository
+      uses: actions/checkout@v3
 
-    - name: Fetch and process URL
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.x'
+
+    - name: Install dependencies
       run: |
-        # Debugging için zaman damgası
-        echo "Başlangıç zamanı: $(date +'%Y-%m-%d %H:%M:%S')"
-        
-        # Gelişmiş curl komutu
-        curl -vLkA "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36" \
-        -H "Accept: text/html" \
-        -H "Accept-Language: en-US,en;q=0.9" \
-        -H "Connection: keep-alive" \
-        "https://sonbahistv5.pages.dev/" \
-        -o response.html 2> curl.log
+        pip install requests beautifulsoup4
 
-        # Response kontrolü
-        if [ ! -s response.html ]; then
-          echo "HATA: Boş response alındı!"
-          cat curl.log
-          exit 1
-        fi
-
-        # Güncellenmiş regex pattern
-        M3U8_URL=$(grep -Eo 'https?://[^"'\'']+\.m3u8(?=["'\''&]|$)' response.html | head -1)
-
-        # Alternatif arama yöntemi
-        if [ -z "$M3U8_URL" ]; then
-          M3U8_URL=$(grep -Eo 'src=["'\'']([^"'\'']+\.m3u8)["'\'']' response.html | cut -d"'" -f2 | head -1)
-        fi
-
-        # URL debug
-        echo "Bulunan URL: $M3U8_URL"
-        echo "Response boyutu: $(wc -c <response.html) bytes"
-        
-        if [ -z "$M3U8_URL" ]; then
-          echo "HATA: .m3u8 bulunamadı! İlk 200 karakter:"
-          head -c 200 response.html
-          exit 1
-        fi
-
-        # HTML oluştur
-        cat <<EOF > urls.html
-        <!DOCTYPE html>
-        <html>
-        <head>
-            <meta http-equiv="refresh" content="0; url='$M3U8_URL'">
-        </head>
-        <body>
-            <script>
-                window.location.href = "$M3U8_URL";
-            </script>
-        </body>
-        </html>
-        EOF
+    - name: Run m3u8 extraction script
+      run: |
+        python get_m3u8.py
 
     - name: Commit and push changes
       run: |
-        git config --global user.name "Auto Updater"
-        git config --global user.email "auto@updater.com"
+        git config --global user.name "GitHub Actions"
+        git config --global user.email "actions@github.com"
         git add urls.html
-        git diff-index --quiet HEAD || git commit -m "Auto-update: $(date +'%Y%m%d-%H%M%S')"
+        git commit -m "Update m3u8 URL"
         git push
