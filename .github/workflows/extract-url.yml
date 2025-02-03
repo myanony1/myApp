@@ -1,9 +1,9 @@
 name: Extract M3U8 URL
 
 on:
-  workflow_dispatch: # Manuel tetikleme
+  workflow_dispatch:
   schedule:
-    - cron: '0 0 * * *' # Her gün UTC 00:00'da çalışır
+    - cron: '0 0 * * *'
 
 jobs:
   extract-url:
@@ -15,17 +15,29 @@ jobs:
 
     - name: Fetch and process URL
       run: |
-        # .m3u8 URL'sini çek ve kaydet
-        M3U8_URL=$(curl -sL https://sonbahistv5.pages.dev | grep -Eo 'https?://[^"]+\.m3u8' | head -1)
+        # User-agent ekleyerek ve SSL doğrulamasını kapatarak içerik çekme
+        CONTENT=$(curl -sL -A "Mozilla/5.0" --ssl-no-revoke https://sonbahistv5.pages.dev)
         
-        # HTML dosyasını oluştur
+        # Daha kesin regex patterni
+        M3U8_URL=$(echo "$CONTENT" | grep -Eo 'https?://[^"'\'']+\.m3u8' | head -1)
+
+        # URL kontrolü
+        if [ -z "$M3U8_URL" ]; then
+          echo "HATA: .m3u8 URL'si bulunamadı!" > urls.html
+          exit 1
+        fi
+
+        # HTML oluşturma
         echo "<!DOCTYPE html>
         <html>
         <head>
             <title>M3U8 URLs</title>
+            <meta charset=\"UTF-8\">
         </head>
         <body>
-            <pre>$M3U8_URL</pre>
+            <a href=\"$M3U8_URL\">$M3U8_URL</a>
+            <hr>
+            <div>Son Güncelleme: $(date +'%Y-%m-%d %H:%M:%S')</div>
         </body>
         </html>" > urls.html
 
@@ -34,5 +46,5 @@ jobs:
         git config --global user.name "GitHub Actions"
         git config --global user.email "actions@github.com"
         git add urls.html
-        git commit -m "Update M3U8 URL: $(date +'%Y-%m-%d %H:%M:%S')"
+        git commit -m "Update M3U8 URL: $(date +'%Y-%m-%d %H:%M:%S')" || echo "Değişiklik yok, commit atlanıyor."
         git push
