@@ -1,4 +1,4 @@
-name: Scrape m3u8 URL
+name: Scrape Blob URL
 
 on:
   schedule:
@@ -16,12 +16,15 @@ jobs:
     - name: Set up Python
       uses: actions/setup-python@v4
       with:
-        python-version: '3.9'  # Python 3.9 kullanabiliriz
+        python-version: '3.9'
 
     - name: Install dependencies
       run: |
-        pip install requests beautifulsoup4 selenium
+        pip install selenium webdriver-manager
 
-    - name: Scrape m3u8 URL
+    - name: Set up ChromeDriver
+      uses: machawk1/chromedriver-action@v2
+
+    - name: Run Python script
       run: |
         python scrape_m3u8.py
