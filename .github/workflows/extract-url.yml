@@ -15,7 +15,6 @@ jobs:
 
     - name: Fetch and process URL
       run: |
-        # User-agent ekleyerek ve SSL doğrulamasını kapatarak içerik çekme
         CONTENT=$(curl -sL -A "Mozilla/5.0" --ssl-no-revoke https://sonbahistv5.pages.dev)
         
         # Daha kesin regex patterni
