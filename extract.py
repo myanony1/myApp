@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.keys import Keys
 
 # Chrome seçeneklerini ayarla
 chrome_options = Options()
@@ -30,11 +31,13 @@ try:
 except Exception as e:
     print("❌ Sayfa yüklenemedi:", e)
 
-# 2️⃣ <div id="player"> öğesine tıklama
+# 2️⃣ <div id="player"> öğesinin tıklanabilir olmasını bekle
 try:
+    # Öğenin tıklanabilir olup olmadığını kontrol et
     player_div = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.ID, "player"))
     )
+    # Tıklama işlemi
     ActionChains(driver).move_to_element(player_div).click().perform()
     print("✅ <div id='player'> öğesine tıklandı.")
 except Exception as e:
