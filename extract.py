@@ -24,7 +24,7 @@ driver.get(target_url)
 # "player-poster" div'ine tıklamayı dene
 try:
     poster = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CLASS_NAME, "play-wrapper"))
+        EC.element_to_be_clickable((By.CLASS_NAME, "container pointer-enabled"))
     )
     ActionChains(driver).move_to_element(poster).click().perform()
     print("Player poster'ına tıklandı.")
