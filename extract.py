@@ -21,15 +21,15 @@ driver = webdriver.Chrome(options=chrome_options)
 target_url = "https://trgoals1150.xyz/"
 driver.get(target_url)
 
-# "player-poster" div'ine tıklamayı dene
+# "player-poster clickable" div'ine tıklamayı dene
 try:
     poster = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CLASS_NAME, "container pointer-enabled"))
+        EC.element_to_be_clickable((By.CSS_SELECTOR, ".player-poster.clickable"))
     )
     ActionChains(driver).move_to_element(poster).click().perform()
-    print("Player poster'ına tıklandı.")
+    print("Player poster clickable tıklandı.")
 except Exception as e:
-    print("Player poster butonu bulunamadı veya tıklanamadı:", e)
+    print("Player poster clickable butonu bulunamadı veya tıklanamadı:", e)
 
 # 20 saniye bekle
 print("Video yükleniyor, 20 saniye bekleniyor...")
