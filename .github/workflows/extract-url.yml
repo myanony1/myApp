@@ -1,30 +1,33 @@
-name: Update m3u8 URLs
+name: Extract M3U8 URL
 
 on:
+  workflow_dispatch: # Manuel tetikleme
   schedule:
-    - cron: '0 */3 * * *'  # Her 3 saatte bir çalışacak
-  workflow_dispatch:
+    - cron: '0 0 * * *' # Her gün UTC 00:00'da çalışır
 
 jobs:
-  get_m3u8_url:
+  extract-url:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Check out repository
+    - name: Checkout repository
       uses: actions/checkout@v4
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
+    - name: Fetch and process URL
       run: |
-        pip install requests beautifulsoup4
-
-    - name: Run m3u8 extraction script
-      run: |
-        python get_m3u8.py
+        # .m3u8 URL'sini çek ve kaydet
+        M3U8_URL=$(curl -sL https://sonbahistv5.pages.dev | grep -Eo 'https?://[^"]+\.m3u8' | head -1)
+        
+        # HTML dosyasını oluştur
+        echo "<!DOCTYPE html>
+        <html>
+        <head>
+            <title>M3U8 URLs</title>
+        </head>
+        <body>
+            <pre>$M3U8_URL</pre>
+        </body>
+        </html>" > urls.html
 
     - name: Commit and push changes
       run: |
