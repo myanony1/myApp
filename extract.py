@@ -2,30 +2,37 @@ import time
 import json
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.common.by import By
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
 # Chrome seçeneklerini ayarlıyoruz
 chrome_options = Options()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--no-sandbox')
-
-# Logging özelliklerini options üzerinden ayarlıyoruz (Selenium 4)
 chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
-# ChromeDriver'ı başlatıyoruz
 driver = webdriver.Chrome(options=chrome_options)
 
-# Hedef URL'yi açıyoruz
-target_url = "https://trgoals1150.xyz/"
+target_url = "https://trgoals1150.xyz/"  # Gerçek URL'nizi buraya koyun
 driver.get(target_url)
 
-# Sayfanın yüklenmesi ve network isteklerinin tamamlanması için bekliyoruz
-time.sleep(5)
+# Reklamı atlamak için eğer buton varsa tıklama (buton seçicisini siteye göre ayarlayın)
+try:
+    skip_button = WebDriverWait(driver, 15).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "button.skip-ad"))
+    )
+    skip_button.click()
+    print("Reklam atlandı.")
+except Exception as e:
+    print("Reklam atlama butonu bulunamadı veya tıklanamadı:", e)
 
-# Chrome performance loglarını çekiyoruz
+# Asıl video akışı başlaması için yeterli süre bekleyin (örneğin 20 saniye)
+time.sleep(20)
+
+# Network loglarını çekiyoruz
 logs = driver.get_log("performance")
-
-# ".m3u8" içeren URL'leri toplamak için bir set oluşturuyoruz
 m3u8_urls = set()
 
 for entry in logs:
@@ -34,15 +41,15 @@ for entry in logs:
         message = log_json.get("message", {})
         if message.get("method") == "Network.responseReceived":
             response_url = message.get("params", {}).get("response", {}).get("url", "")
-            if ".m3u8" in response_url:
+            # Örneğin: URL'de 'ad' kelimesi varsa reklam akışı olarak kabul edebiliriz
+            if ".m3u8" in response_url and "ad" not in response_url.lower():
                 m3u8_urls.add(response_url)
-    except Exception as e:
-        # Log işlenirken hata oluşursa, bu hataları yoksayıp devam ediyoruz.
+    except Exception:
         pass
 
 driver.quit()
 
-# Bulunan URL'leri urls.html dosyasına yazıyoruz
+# Sonuçları yazdırma
 with open("urls.html", "w", encoding="utf-8") as f:
     f.write("<html><body>\n")
     for url in m3u8_urls:
