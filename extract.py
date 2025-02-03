@@ -24,8 +24,8 @@ driver.get(target_url)
 # "player-poster clickable" div'ine tıklamayı dene
 try:
     poster = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, ".player-poster.clickable"))
-    )
+    EC.element_to_be_clickable((By.XPATH, "//div[contains(@class, 'player-poster') and contains(@class, 'clickable')]"))
+)
     ActionChains(driver).move_to_element(poster).click().perform()
     print("Player poster clickable tıklandı.")
 except Exception as e:
