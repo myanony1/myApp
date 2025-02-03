@@ -17,7 +17,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
-target_url = "https://bit.ly/m/taraftarium24w"
+target_url = "https://taraffco6.baby/"
 driver.get(target_url)
 
 # 1️⃣ Sayfanın tamamen yüklenmesini beklemek (sayfa yükleme durumu)
