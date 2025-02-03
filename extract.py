@@ -38,7 +38,7 @@ try:
         EC.element_to_be_clickable((By.ID, "player"))
     )
     # Tıklama işlemi
-    ActionChains(driver).move_to_element(player_div).click().perform()
+    driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
