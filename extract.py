@@ -1,24 +1,28 @@
-import json
-import re
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import json
+import re
 
 # Chrome seçeneklerini ayarla
 chrome_options = Options()
-chrome_options.add_argument('--headless')  # Arka planda çalıştır
+chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--no-sandbox')
-chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
-# ChromeDriver'ı başlat
+# WebDriver başlat
 driver = webdriver.Chrome(options=chrome_options)
 
-# Hedef URL'yi aç
-target_url = "https://trgoals1152.xyz/"
+# Kısa URL'yi aç ve yönlendirilmiş URL'yi al
+short_url = "https://bit.ly/4h9sItK?r=lp&m=Mn75nRl72h3"
+driver.get(short_url)
+target_url = driver.current_url
+print("✅ Yönlendirilmiş URL alındı:", target_url)
+
+# Hedef URL'ye git
 driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
