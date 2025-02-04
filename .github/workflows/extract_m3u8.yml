@@ -2,7 +2,7 @@ name: Extract m3u8 URL and Commit
 
 on:
   push:
-    branches: [ main ]
+    branches-ignore: [ main ]  # This prevents the workflow from triggering on pushes to the main branch
   workflow_dispatch:
   schedule:
     - cron: '0 */3 * * *'  # Every 3 hours
