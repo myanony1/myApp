@@ -113,7 +113,7 @@ for index, url in enumerate(m3u8_urls, start=1):
 
     # exotrgoals1 ve exotrgoals2 div'lerini oluştur
     entry_exotrgoals1 = f"""<div class='exotrgoals1' style='display:none'>
-      Lig Sports {index} HD | 5 {new_url_exotrgoals1} {target_url}
+      Lig Sports {index} HD | 4 {new_url_exotrgoals1} {target_url}
 </div>"""
     entry_exotrgoals2 = f"""<div class='exotrgoals2' style='display:none'>
       Lig Sports {index} HD | 5 {new_url_exotrgoals2} {target_url}
