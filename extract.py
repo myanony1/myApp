@@ -89,54 +89,42 @@ for entry in logs:
 driver.quit()
 
 # URLs'yi alıp exotrgoals1 ve exotrgoals2 içeriğini oluştur
-new_entries_exotrgoals1 = []
-new_entries_exotrgoals2 = []
+new_content_exotrgoals1 = "\n".join(
+    [f"Lig Sports {index} HD | 4 {url} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
+)
+new_content_exotrgoals2 = "\n".join(
+    [f"Lig Sports {index} HD | 5 {url.replace('.m3u8', 'yayin1.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
+)
 
-for index, url in enumerate(m3u8_urls, start=1):
-    base_url = "/".join(url.split("/")[:-1])  # Son kısmı at
-    new_url_exotrgoals1 = f"{base_url}/yayinzirve.m3u8"
-    new_url_exotrgoals2 = f"{base_url}/yayin1.m3u8"
-
-    entry_exotrgoals1 = f"""<div class='exotrgoals1' style='display:none'>
-      Lig Sports {index} HD | 4 {new_url_exotrgoals1} {target_url}
-</div>"""
-    entry_exotrgoals2 = f"""<div class='exotrgoals2' style='display:none'>
-      Lig Sports {index} HD | 5 {new_url_exotrgoals2} {target_url}
-</div>"""
-
-    new_entries_exotrgoals1.append(entry_exotrgoals1)
-    new_entries_exotrgoals2.append(entry_exotrgoals2)
-
-new_content_exotrgoals1 = "\n".join(new_entries_exotrgoals1)
-new_content_exotrgoals2 = "\n".join(new_entries_exotrgoals2)
-
-# HTML dosyasını aç ve sadece mevcut div'leri güncelle
+# HTML dosyasını aç ve sadece mevcut div içeriğini değiştir
 try:
     with open(".index.html", "r", encoding="utf-8") as f:
         content = f.read()
 
-    # Eğer dosyada bu div'ler varsa, sadece içeriğini güncelle
-    if "<div class='exotrgoals1'" in content and "<div class='exotrgoals2'" in content:
-        updated_content = re.sub(
-            r'(<div class=[\'"]exotrgoals1[\'"][^>]*>).*?(</div>)',
-            r'\1' + new_content_exotrgoals1 + r'\2',
-            content,
-            flags=re.DOTALL
-        )
-        updated_content = re.sub(
-            r'(<div class=[\'"]exotrgoals2[\'"][^>]*>).*?(</div>)',
-            r'\1' + new_content_exotrgoals2 + r'\2',
-            updated_content,
-            flags=re.DOTALL
-        )
+    # Sadece içeriği değiştirmek için regex ile güncelleme yapıyoruz
+    updated_content = re.sub(
+        r'(<div class=[\'"]exotrgoals1[\'"][^>]*>)(.*?)(</div>)',
+        rf'\1\n{new_content_exotrgoals1}\n\3',
+        content,
+        flags=re.DOTALL
+    )
+    
+    updated_content = re.sub(
+        r'(<div class=[\'"]exotrgoals2[\'"][^>]*>)(.*?)(</div>)',
+        rf'\1\n{new_content_exotrgoals2}\n\3',
+        updated_content,
+        flags=re.DOTALL
+    )
 
-        # Güncellenmiş içeriği kaydet
+    # Eğer içerik değiştiyse dosyayı güncelle
+    if updated_content != content:
         with open(".index.html", "w", encoding="utf-8") as f:
             f.write(updated_content)
-
-        print("✅ Var olan exotrgoals1 ve exotrgoals2 div'leri güncellendi.")
+        print("✅ exotrgoals1 ve exotrgoals2 div içerikleri güncellendi.")
     else:
-        print("⚠️ exotrgoals1 ve exotrgoals2 div'leri bulunamadı, herhangi bir ekleme yapılmadı.")
-
+        print("ℹ️ exotrgoals1 ve exotrgoals2 içerikleri zaten güncel.")
+    
 except FileNotFoundError:
-    print("❌ .index.html dosyası bulunamadı. Güncelleme yapılmadı.")
+    print("❌ Hata: .index.html dosyası bulunamadı.")
+except Exception as e:
+    print(f"❌ Dosya güncellenirken hata oluştu: {e}")
