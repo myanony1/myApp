@@ -46,7 +46,7 @@ jobs:
       - name: Commit and push urls.html if changed
         uses: EndBug/add-and-commit@v9
         with:
-          add: 'urls.html'
+          add: '.index.html'
           message: 'Add generated urls.html'
           # GitHub Token otomatik olarak kullanılacaktır. 
           author_name: 'github-actions'
