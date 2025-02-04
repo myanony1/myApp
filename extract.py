@@ -87,13 +87,31 @@ for entry in logs:
 
 driver.quit()
 
-# 8️⃣ URLs'yi urls.html dosyasına yazma (istenen formatta)
-with open("urls.html", "w", encoding="utf-8") as f:
-    f.write("<html><body>\n")
-    for index, url in enumerate(m3u8_urls, start=1):
-        f.write(f"<div class='exotrgoals2' style='display:none'>\n")
-        f.write(f"      Lig Sports {index} HD | 5 {url} {target_url}\n")
-        f.write("</div>\n")
-    f.write("</body></html>\n")
+# 8️⃣ URLs'yi urls.html dosyasına ekleme (var olan içeriği koruyarak)
+try:
+    # Mevcut içeriği oku
+    with open("urls.html", "r", encoding="utf-8") as f:
+        content = f.read()
+except FileNotFoundError:
+    content = "<html><body>\n</body></html>"
 
-print("✅ Extraction complete. URLs written to urls.html")
+# Yeni içeriği oluştur
+new_entries = []
+for index, url in enumerate(m3u8_urls, start=1):
+    entry = f"""<div class='exotrgoals2' style='display:none'>
+      Lig Sports {index} HD | 5 {url} {target_url}
+</div>"""
+    new_entries.append(entry)
+
+# Yeni girişleri </body> etiketinden önce ekle
+if "</body>" in content:
+    updated_content = content.replace("</body>", "\n".join(new_entries) + "\n</body>")
+else:
+    # Eğer body etiketi yoksa en sona ekle
+    updated_content = content + "\n" + "\n".join(new_entries)
+
+# Dosyayı güncelle
+with open("urls.html", "w", encoding="utf-8") as f:
+    f.write(updated_content)
+
+print("✅ Extraction complete. URLs appended to urls.html without deleting existing content")
