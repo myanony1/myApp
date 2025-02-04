@@ -86,7 +86,7 @@ for entry in logs:
                 base_url = response_url.split("/")[0]  # https:// kısmı
                 mid_part = "/".join(response_url.split("/")[1:-1])  # Ortadaki kısmı
                 last_part = response_url.split("/")[-1]  # Son kısmı (örneğin .m3u8 dosya adı)
-                
+
                 # Yeni URL'yi oluşturuyoruz (baş ve son sabit, orta kısmı değiştiriyoruz)
                 new_url = f"{base_url}/{mid_part}/{last_part}"
                 m3u8_urls.add(new_url)
@@ -101,12 +101,24 @@ new_entries_exotrgoals1 = []
 new_entries_exotrgoals2 = []
 
 for index, url in enumerate(m3u8_urls, start=1):
+    # exotrgoals1 için URL'nin son kısmını değiştirme
+    base_url_exotrgoals1 = url.split("/")[0]  # https:// kısmı
+    mid_part_exotrgoals1 = "/".join(url.split("/")[1:-1])  # Ortadaki kısım
+    new_url_exotrgoals1 = f"{base_url_exotrgoals1}/{mid_part_exotrgoals1}/yayinzirve.m3u8"
+
+    # exotrgoals2 için URL'nin son kısmını değiştirme
+    base_url_exotrgoals2 = url.split("/")[0]  # https:// kısmı
+    mid_part_exotrgoals2 = "/".join(url.split("/")[1:-1])  # Ortadaki kısım
+    new_url_exotrgoals2 = f"{base_url_exotrgoals2}/{mid_part_exotrgoals2}/yayin1.m3u8"
+
+    # exotrgoals1 ve exotrgoals2 div'lerini oluştur
     entry_exotrgoals1 = f"""<div class='exotrgoals1' style='display:none'>
-      Lig Sports {index} HD | 5 {url} {target_url}
+      Lig Sports {index} HD | 5 {new_url_exotrgoals1} {target_url}
 </div>"""
     entry_exotrgoals2 = f"""<div class='exotrgoals2' style='display:none'>
-      Lig Sports {index} HD | 5 {url} {target_url}
+      Lig Sports {index} HD | 5 {new_url_exotrgoals2} {target_url}
 </div>"""
+    
     new_entries_exotrgoals1.append(entry_exotrgoals1)
     new_entries_exotrgoals2.append(entry_exotrgoals2)
 
