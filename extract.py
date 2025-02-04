@@ -5,6 +5,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+import re
 
 # Chrome seçeneklerini ayarla
 chrome_options = Options()
@@ -88,13 +89,12 @@ for entry in logs:
 driver.quit()
 
 # 8️⃣ URLs'yi urls.html dosyasına yazma (SADECE exotrgoals2 içeriğini değiştir)
-import re
-
 # Yeni HTML bloklarını oluştur
 new_entries = []
 for index, url in enumerate(m3u8_urls, start=1):
-    entry = f"""<div class='exotrgoals2' style='display:none'>
-      Lig Sports {index} HD | 5 {url} {target_url}
+    base_url = url.split('/')[2]  # URL'deki "https://" kısmını çıkar, sadece domain'i al
+    entry = f"""<div class='exotrgoals{index}' style='display:none'>
+      Lig Sports {index} HD | 5 {base_url}/{url.split('/')[3]} {target_url}
 </div>"""
     new_entries.append(entry)
 new_content = "\n".join(new_entries)
@@ -104,15 +104,15 @@ try:
     with open(".index.html", "r", encoding="utf-8") as f:
         content = f.read()
     
-    # Eski exotrgoals2 içeriğini regex ile bul ve yeniyle değiştir
+    # Eski exotrgoals ile başlayan tüm class'ları güncelle
     updated_content = re.sub(
-        r'<div class=[\'"]exotrgoals2[\'"].*?</div>\s*',
+        r'<div class=[\'"]exotrgoals[\'"].*?</div>\s*',
         new_content,
         content,
         flags=re.DOTALL
     )
     
-    # Eğer hiç exotrgoals2 yoksa yeni içeriği ekle
+    # Eğer hiç exotrgoals yoksa yeni içeriği ekle
     if updated_content == content:
         if "</body>" in content:
             updated_content = content.replace("</body>", new_content + "\n</body>")
@@ -129,4 +129,4 @@ except FileNotFoundError:
 with open(".index.html", "w", encoding="utf-8") as f:
     f.write(updated_content)
 
-print("✅ Extraction complete. exotrgoals2 divs updated, other content preserved")
+print("✅ Extraction complete. exotrgoals divs updated, other content preserved")
