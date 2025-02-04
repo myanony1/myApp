@@ -90,10 +90,10 @@ driver.quit()
 
 # URLs'yi alıp exotrgoals1 ve exotrgoals2 içeriğini oluştur
 new_content_exotrgoals1 = "\n".join(
-    [f"Lig Sports {index} HD | 4 {url} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
+    [f"Lig Sports {index} HD | 4 {url.replace(url.split('/')[-1], 'yayin1.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
 )
 new_content_exotrgoals2 = "\n".join(
-    [f"Lig Sports {index} HD | 5 {url.replace('.m3u8', 'yayin1.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
+    [f"Lig Sports {index} HD | 5 {url.replace(url.split('/')[-1], 'yayinzirve.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
 )
 
 # HTML dosyasını aç ve sadece mevcut div içeriğini değiştir
