@@ -17,7 +17,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
-target_url = "https://taraffco6.baby/"
+target_url = "https://trgoals1152.xyz/"
 driver.get(target_url)
 
 # 1️⃣ Sayfanın tamamen yüklenmesini beklemek (sayfa yükleme durumu)
@@ -29,17 +29,7 @@ try:
 except Exception as e:
     print("❌ Sayfa yüklenemedi:", e)
 
-# 2️⃣ İlk URL'yi tıklamak (links class'ı içerisindeki ilk <a> öğesi)
-try:
-    first_link = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "section.links a"))
-    )
-    first_link.click()
-    print("✅ İlk URL tıklanarak yeni sayfaya yönlendirildi.")
-except Exception as e:
-    print("❌ İlk URL tıklanamadı:", e)
-
-# 3️⃣ <a href="/" class="topLogo1"> öğesini tıklama
+# 2️⃣ <a> öğesini tıklamak (logo)
 try:
     logo_link = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "a.topLogo1"))
@@ -48,6 +38,13 @@ try:
     print("✅ Logo tıklanarak ana sayfaya yönlendirildi.")
 except Exception as e:
     print("❌ Logo öğesi tıklanamadı:", e)
+
+# 3️⃣ Sayfayı kaydırarak öğenin tıklanabilir olduğundan emin ol
+try:
+    driver.execute_script("window.scrollTo(0, 500);")  # Sayfayı kaydırarak öğenin görünür olmasını sağla
+    print("✅ Sayfa kaydırıldı.")
+except Exception as e:
+    print("❌ Sayfa kaydırılamadı:", e)
 
 # 4️⃣ <div id="player"> öğesinin tıklanabilir olmasını bekle
 try:
