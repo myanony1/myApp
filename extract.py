@@ -20,7 +20,7 @@ driver = webdriver.Chrome(options=chrome_options)
 target_url = "https://trgoals1152.xyz/"
 driver.get(target_url)
 
-# 1️⃣ Sayfanın tamamen yüklenmesini beklemek (sayfa yükleme durumu)
+# 1️⃣ Sayfanın tamamen yüklenmesini beklemek
 try:
     WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.TAG_NAME, "body"))
@@ -39,28 +39,28 @@ try:
 except Exception as e:
     print("❌ Logo öğesi tıklanamadı:", e)
 
-# 3️⃣ Sayfayı kaydırarak öğenin tıklanabilir olduğundan emin ol
+# 3️⃣ Sayfayı kaydır
 try:
-    driver.execute_script("window.scrollTo(0, 500);")  # Sayfayı kaydırarak öğenin görünür olmasını sağla
+    driver.execute_script("window.scrollTo(0, 500);")
     print("✅ Sayfa kaydırıldı.")
 except Exception as e:
     print("❌ Sayfa kaydırılamadı:", e)
 
-# 4️⃣ <div id="player"> öğesinin tıklanabilir olmasını bekle
+# 4️⃣ <div id="player"> öğesine tıkla
 try:
     player_div = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.ID, "player"))
     )
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
-    driver.execute_script("arguments[0].click();", player_div)  # JavaScript ile tıklama
+    driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
 # 5️⃣ 10 saniye bekle
-WebDriverWait(driver, 10).until(lambda driver: True)  # 7 saniye bekletme
+WebDriverWait(driver, 10).until(lambda driver: True)
 
-# 6️⃣ "REKLAMI GEC" butonuna tıklama
+# 6️⃣ "REKLAMI GEC" butonuna tıkla
 try:
     skip_button = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEC')]"))
@@ -70,7 +70,7 @@ try:
 except Exception as e:
     print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
 
-# 7️⃣ .m3u8 linklerini çekme
+# 7️⃣ .m3u8 linklerini çekme (video.twimg.com dışındakiler)
 logs = driver.get_log("performance")
 m3u8_urls = set()
 
@@ -80,7 +80,7 @@ for entry in logs:
         message = log_json.get("message", {})
         if message.get("method") == "Network.responseReceived":
             response_url = message.get("params", {}).get("response", {}).get("url", "")
-            if ".m3u8" in response_url:
+            if ".m3u8" in response_url and not response_url.startswith("https://video.twimg.com"):
                 m3u8_urls.add(response_url)
     except Exception:
         pass  # Hataları yoksay
