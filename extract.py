@@ -129,21 +129,21 @@ try:
     # Mevcut dosyayı oku
     with open(".index.html", "r", encoding="utf-8") as f:
         content = f.read()
-    
+
     # Eski exotrgoals1 ve exotrgoals2 içeriğini regex ile bul ve yeniyle değiştir
     updated_content = re.sub(
-        r'<div class=[\'"]exotrgoals1[\'"].*?</div>\s*',
-        new_content_exotrgoals1,
+        r'(<div class=[\'"]exotrgoals1[\'"][^>]*>).*?(</div>)',
+        r'\1' + new_content_exotrgoals1 + r'\2',
         content,
         flags=re.DOTALL
     )
     updated_content = re.sub(
-        r'<div class=[\'"]exotrgoals2[\'"].*?</div>\s*',
-        new_content_exotrgoals2,
+        r'(<div class=[\'"]exotrgoals2[\'"][^>]*>).*?(</div>)',
+        r'\1' + new_content_exotrgoals2 + r'\2',
         updated_content,
         flags=re.DOTALL
     )
-    
+
     # Eğer hiç exotrgoals1 veya exotrgoals2 yoksa yeni içeriği ekle
     if updated_content == content:
         if "</body>" in content:
@@ -163,3 +163,4 @@ with open(".index.html", "w", encoding="utf-8") as f:
     f.write(updated_content)
 
 print("✅ Extraction complete. exotrgoals1 and exotrgoals2 divs updated, other content preserved")
+
