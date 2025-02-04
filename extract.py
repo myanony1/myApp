@@ -1,19 +1,20 @@
+import json
+import re
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-import json
-import re
 
 # Chrome seçeneklerini ayarla
 chrome_options = Options()
-chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')  # Arka planda çalıştır
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--no-sandbox')
+chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
-# WebDriver başlat
+# ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
 # Kısa URL'yi aç ve yönlendirilmiş URL'yi al
