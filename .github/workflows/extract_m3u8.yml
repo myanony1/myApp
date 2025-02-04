@@ -4,6 +4,8 @@ on:
   push:
     branches: [ main ]
   workflow_dispatch:
+  schedule:
+    - cron: '0 */3 * * *'  # Every 3 hours
 
 jobs:
   extract:
@@ -48,6 +50,5 @@ jobs:
         with:
           add: '.index.html'
           message: 'Add generated urls.html'
-          # GitHub Token otomatik olarak kullanılacaktır. 
           author_name: 'github-actions'
           author_email: 'github-actions@github.com'
