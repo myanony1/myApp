@@ -18,7 +18,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Kısa URL'yi aç ve yönlendirilmiş URL'yi al
-short_url = "https://bit.ly/4h9sItK?r=lp&m=Mn75nRl72h3"
+short_url = "https://t.ly/_u07W"
 driver.get(short_url)
 target_url = driver.current_url
 print("✅ Yönlendirilmiş URL alındı:", target_url)
