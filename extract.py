@@ -87,31 +87,46 @@ for entry in logs:
 
 driver.quit()
 
-# 8️⃣ URLs'yi urls.html dosyasına ekleme (var olan içeriği koruyarak)
-try:
-    # Mevcut içeriği oku
-    with open("urls.html", "r", encoding="utf-8") as f:
-        content = f.read()
-except FileNotFoundError:
-    content = "<html><body>\n</body></html>"
+# 8️⃣ URLs'yi urls.html dosyasına yazma (SADECE exotrgoals2 içeriğini değiştir)
+import re
 
-# Yeni içeriği oluştur
+# Yeni HTML bloklarını oluştur
 new_entries = []
 for index, url in enumerate(m3u8_urls, start=1):
     entry = f"""<div class='exotrgoals2' style='display:none'>
       Lig Sports {index} HD | 5 {url} {target_url}
 </div>"""
     new_entries.append(entry)
+new_content = "\n".join(new_entries)
 
-# Yeni girişleri </body> etiketinden önce ekle
-if "</body>" in content:
-    updated_content = content.replace("</body>", "\n".join(new_entries) + "\n</body>")
-else:
-    # Eğer body etiketi yoksa en sona ekle
-    updated_content = content + "\n" + "\n".join(new_entries)
+try:
+    # Mevcut dosyayı oku
+    with open(".index.html", "r", encoding="utf-8") as f:
+        content = f.read()
+    
+    # Eski exotrgoals2 içeriğini regex ile bul ve yeniyle değiştir
+    updated_content = re.sub(
+        r'<div class=[\'"]exotrgoals2[\'"].*?</div>\s*',
+        new_content,
+        content,
+        flags=re.DOTALL
+    )
+    
+    # Eğer hiç exotrgoals2 yoksa yeni içeriği ekle
+    if updated_content == content:
+        if "</body>" in content:
+            updated_content = content.replace("</body>", new_content + "\n</body>")
+        else:
+            updated_content = content + "\n" + new_content
+
+except FileNotFoundError:
+    # Dosya yoksa tamamen yeni oluştur
+    updated_content = f"""<html><body>
+{new_content}
+</body></html>"""
 
 # Dosyayı güncelle
-with open("urls.html", "w", encoding="utf-8") as f:
+with open(".index.html", "w", encoding="utf-8") as f:
     f.write(updated_content)
 
-print("✅ Extraction complete. URLs appended to urls.html without deleting existing content")
+print("✅ Extraction complete. exotrgoals2 divs updated, other content preserved")
