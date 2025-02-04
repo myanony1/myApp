@@ -82,51 +82,72 @@ for entry in logs:
         if message.get("method") == "Network.responseReceived":
             response_url = message.get("params", {}).get("response", {}).get("url", "")
             if ".m3u8" in response_url and not response_url.startswith("https://video.twimg.com"):
-                m3u8_urls.add(response_url)
+                # URL'nin baş kısmı (https://) sabit kalsın
+                base_url = response_url.split("/")[0]  # https:// kısmı
+                mid_part = "/".join(response_url.split("/")[1:-1])  # Ortadaki kısmı
+                last_part = response_url.split("/")[-1]  # Son kısmı (örneğin .m3u8 dosya adı)
+                
+                # Yeni URL'yi oluşturuyoruz (baş ve son sabit, orta kısmı değiştiriyoruz)
+                new_url = f"{base_url}/{mid_part}/{last_part}"
+                m3u8_urls.add(new_url)
     except Exception:
         pass  # Hataları yoksay
 
 driver.quit()
 
-# 8️⃣ URLs'yi urls.html dosyasına yazma (SADECE exotrgoals2 içeriğini değiştir)
+# 8️⃣ URLs'yi urls.html dosyasına yazma (SADECE exotrgoals1 ve exotrgoals2 içeriğini değiştir)
 # Yeni HTML bloklarını oluştur
-new_entries = []
+new_entries_exotrgoals1 = []
+new_entries_exotrgoals2 = []
+
 for index, url in enumerate(m3u8_urls, start=1):
-    base_url = url.split('/')[2]  # URL'deki "https://" kısmını çıkar, sadece domain'i al
-    entry = f"""<div class='exotrgoals{index}' style='display:none'>
-      Lig Sports {index} HD | 5 {base_url}/{url.split('/')[3]} {target_url}
+    entry_exotrgoals1 = f"""<div class='exotrgoals1' style='display:none'>
+      Lig Sports {index} HD | 5 {url} {target_url}
 </div>"""
-    new_entries.append(entry)
-new_content = "\n".join(new_entries)
+    entry_exotrgoals2 = f"""<div class='exotrgoals2' style='display:none'>
+      Lig Sports {index} HD | 5 {url} {target_url}
+</div>"""
+    new_entries_exotrgoals1.append(entry_exotrgoals1)
+    new_entries_exotrgoals2.append(entry_exotrgoals2)
+
+new_content_exotrgoals1 = "\n".join(new_entries_exotrgoals1)
+new_content_exotrgoals2 = "\n".join(new_entries_exotrgoals2)
 
 try:
     # Mevcut dosyayı oku
     with open(".index.html", "r", encoding="utf-8") as f:
         content = f.read()
     
-    # Eski exotrgoals ile başlayan tüm class'ları güncelle
+    # Eski exotrgoals1 ve exotrgoals2 içeriğini regex ile bul ve yeniyle değiştir
     updated_content = re.sub(
-        r'<div class=[\'"]exotrgoals[\'"].*?</div>\s*',
-        new_content,
+        r'<div class=[\'"]exotrgoals1[\'"].*?</div>\s*',
+        new_content_exotrgoals1,
         content,
         flags=re.DOTALL
     )
+    updated_content = re.sub(
+        r'<div class=[\'"]exotrgoals2[\'"].*?</div>\s*',
+        new_content_exotrgoals2,
+        updated_content,
+        flags=re.DOTALL
+    )
     
-    # Eğer hiç exotrgoals yoksa yeni içeriği ekle
+    # Eğer hiç exotrgoals1 veya exotrgoals2 yoksa yeni içeriği ekle
     if updated_content == content:
         if "</body>" in content:
-            updated_content = content.replace("</body>", new_content + "\n</body>")
+            updated_content = content.replace("</body>", new_content_exotrgoals1 + new_content_exotrgoals2 + "\n</body>")
         else:
-            updated_content = content + "\n" + new_content
+            updated_content = content + "\n" + new_content_exotrgoals1 + new_content_exotrgoals2
 
 except FileNotFoundError:
     # Dosya yoksa tamamen yeni oluştur
     updated_content = f"""<html><body>
-{new_content}
+{new_content_exotrgoals1}
+{new_content_exotrgoals2}
 </body></html>"""
 
 # Dosyayı güncelle
 with open(".index.html", "w", encoding="utf-8") as f:
     f.write(updated_content)
 
-print("✅ Extraction complete. exotrgoals divs updated, other content preserved")
+print("✅ Extraction complete. exotrgoals1 and exotrgoals2 divs updated, other content preserved")
