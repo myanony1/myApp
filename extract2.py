@@ -80,7 +80,7 @@ driver.quit()
 
 # URLs'yi alıp exoligB içeriğini oluştur
 new_content_exoligB = "\n".join(
-    [f"Lig Sports {index} HD | 5 {url.replace(url.split('/')[-1], 'yayinzirve.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
+    [f"Lig Sports {index} HD | 3 {url.replace(url.split('/')[-1], 'yayinzirve.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
 )
 
 # HTML dosyasını aç ve sadece exoligB div içeriğini değiştir
