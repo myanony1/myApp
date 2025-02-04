@@ -5,7 +5,7 @@ on:
     branches-ignore: [ main ]  # This prevents the workflow from triggering on pushes to the main branch
   workflow_dispatch:
   schedule:
-    - cron: '0 */3 * * *'  # Every 3 hours
+    - cron: '0 */5 * * *'  # Every 3 hours
 
 jobs:
   extract:
