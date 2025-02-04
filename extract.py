@@ -18,7 +18,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
-target_url = "https://trgoals1152.xyz/"
+target_url = "https://t.ly/_u07W"
 driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
