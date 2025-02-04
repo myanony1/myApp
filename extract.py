@@ -20,7 +20,7 @@ driver = webdriver.Chrome(options=chrome_options)
 target_url = "https://trgoals1152.xyz/"
 driver.get(target_url)
 
-# 1️⃣ Sayfanın tamamen yüklenmesini beklemek
+# 1️⃣ Sayfanın tamamen yüklenmesini bekle
 try:
     WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.TAG_NAME, "body"))
@@ -87,11 +87,13 @@ for entry in logs:
 
 driver.quit()
 
-# 8️⃣ URLs'yi urls.html dosyasına yaz
+# 8️⃣ URLs'yi urls.html dosyasına yazma (istenen formatta)
 with open("urls.html", "w", encoding="utf-8") as f:
     f.write("<html><body>\n")
-    for url in m3u8_urls:
-        f.write(f"<p>{url}</p>\n")
+    for index, url in enumerate(m3u8_urls, start=1):
+        f.write(f"<div class='exotrgoals2' style='display:none'>\n")
+        f.write(f"      Lig Sports {index} HD | 5 {url} {target_url}\n")
+        f.write("</div>\n")
     f.write("</body></html>\n")
 
 print("✅ Extraction complete. URLs written to urls.html")
