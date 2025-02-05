@@ -28,6 +28,7 @@ try:
         EC.presence_of_element_located((By.TAG_NAME, "body"))
     )
     print("✅ Sayfa tamamen yüklendi.")
+    time.sleep(3)  # 3 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ Sayfa yüklenemedi:", e)
 
@@ -39,13 +40,6 @@ try:
 except Exception as e:
     print("❌ <div id='dqqqqq'> öğesi sayfadan silinemedi:", e)
 
-# Sayfayı kaydır
-try:
-    driver.execute_script("window.scrollTo(0, 500);")
-    print("✅ Sayfa kaydırıldı.")
-except Exception as e:
-    print("❌ Sayfa kaydırılamadı:", e)
-
 
 # <div id="player"> öğesine tıkla
 try:
@@ -55,11 +49,10 @@ try:
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
+    time.sleep(8)  # 8 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
-
-# 10 saniye bekle
-WebDriverWait(driver, 10).until(lambda driver: True)
+    
 
 # "REKLAMI GEC" butonuna tıkla
 try:
@@ -68,8 +61,11 @@ try:
     )
     ActionChains(driver).move_to_element(skip_button).click().perform()
     print("✅ 'REKLAMI GEC' butonuna tıklandı.")
+    time.sleep(5)  # 5 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
+
+
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
 m3u8_urls = set()
