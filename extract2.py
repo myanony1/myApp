@@ -91,12 +91,12 @@ try:
 
     for class_name, url_suffix in exolig_classes.items():
         new_content = "\n".join(
-            [f"Lig Sports {index} HD | 3 {url.replace(url.split('/')[-1], url_suffix)} {target_url}" 
+            [f"<div class='{class_name}' style='display:none'>\n  Lig Sports {index} HD | 3 {url.replace(url.split('/')[-1], url_suffix)} {target_url}\n</div>" 
              for index, url in enumerate(m3u8_urls, start=1)]
         )
         
         # Sınıfa göre içeriği değiştir
-        updated_content = re.sub(
+        content = re.sub(
             rf'(<div class=[\'\"]{class_name}[\'\"][^>]*>)(.*?)(</div>)',
             rf'\1\n{new_content}\n\3',
             content,
@@ -104,12 +104,9 @@ try:
         )
 
     # Eğer içerik değiştiyse dosyayı güncelle
-    if updated_content != content:
-        with open(".index.html", "w", encoding="utf-8") as f:
-            f.write(updated_content)
-        print(f"✅ {', '.join(exolig_classes.keys())} div içerikleri güncellendi.")
-    else:
-        print("ℹ️ İçerik zaten güncel.")
+    with open(".index.html", "w", encoding="utf-8") as f:
+        f.write(content)
+    print(f"✅ {', '.join(exolig_classes.keys())} div içerikleri güncellendi.")
     
 except FileNotFoundError:
     print("❌ Hata: .index.html dosyası bulunamadı.")
