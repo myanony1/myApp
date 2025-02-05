@@ -17,16 +17,24 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 # ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
-# Kısaltılmış URL'yi aç ve yönlendirilen son URL'yi al
+# Kısaltılmış URL'nin yönlendirdiği son URL'yi al
 short_url = "https://t.ly/_u07W"
-driver.get(short_url)
+response = requests.get(short_url, allow_redirects=True)
+target_url = response.url
+print("Yönlendirilen URL:", target_url)
 
-# Yönlendirilen son URL'yi al
-target_url = driver.current_url
-print(f"✅ Yönlendirilen son URL: {target_url}")
+# Chrome seçeneklerini ayarla
+chrome_options = Options()
+chrome_options.add_argument('--headless')  # Arka planda çalıştır
+chrome_options.add_argument('--disable-gpu')
+chrome_options.add_argument('--no-sandbox')
+
+# ChromeDriver'ı başlat
+driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
 driver.get(target_url)
+print("Sayfa açıldı:", driver.title)
 
 # Sayfanın tamamen yüklenmesini bekle
 try:
