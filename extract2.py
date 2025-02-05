@@ -39,6 +39,13 @@ try:
 except Exception as e:
     print("❌ <div id='dqqqqq'> öğesi sayfadan silinemedi:", e)
 
+# Sayfayı kaydır
+try:
+    driver.execute_script("window.scrollTo(0, 500);")
+    print("✅ Sayfa kaydırıldı.")
+except Exception as e:
+    print("❌ Sayfa kaydırılamadı:", e)
+
 
 # <div class="player-poster clickable" data-poster=""> öğesine tıklama
 try:
