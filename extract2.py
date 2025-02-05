@@ -49,8 +49,8 @@ try:
     driver.execute_script("arguments[0].click();", player_poster_div)  # Öğeye tıkla
     print("✅ <div class='player-poster clickable'> öğesine tıklandı.")
     
-    # 20 saniye bekle
-    time.sleep(20)
+    # 35 saniye bekle
+    time.sleep(35)
 except Exception as e:
     print("❌ <div class='player-poster clickable'> öğesi tıklanamadı:", e)
 
