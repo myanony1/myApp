@@ -1,6 +1,6 @@
 import json
 import re
-import time  # Yeni eklenen modül
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -8,84 +8,104 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Chrome seçeneklerini ayarla
+# Chrome ayarları
 chrome_options = Options()
 chrome_options.add_argument('--headless')
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--no-sandbox')
-chrome_options.add_argument('--disable-dev-shm-usage')  # Yeni eklenen optimizasyon
+chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
-# ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
-# Bit.ly URL'sine git
-initial_url = "https://bit.ly/m/taraftarium24w"
-driver.get(initial_url)
+# 1. ADIM: Bit.ly üzerinden ilk yönlendirme
+def get_target_url():
+    try:
+        print("🌐 Bit.ly bağlantısına gidiliyor...")
+        driver.get("https://bit.ly/m/taraftarium24w")
+        
+        # Linkler bölümünün yüklenmesini bekle
+        WebDriverWait(driver, 20).until(
+            EC.presence_of_element_located((By.XPATH, "//section[@class='links']"))
+        )
+        print("✅ Linkler bölümü yüklendi")
+        
+        # İlk linki bul
+        first_link = WebDriverWait(driver, 10).until(
+            EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
+        )
+        first_url = first_link.get_attribute('href')
+        print(f"🔗 İlk link URL: {first_url}")
+        
+        # Linke tıkla
+        first_link.click()
+        print("🖱️ İlk linke tıklandı")
+        
+        # 10 saniye bekleyerek ek yönlendirmeler için
+        print("⏳ Ek yönlendirmeler bekleniyor (10sn)...")
+        time.sleep(10)
+        
+        # Son URL kontrolü
+        WebDriverWait(driver, 30).until(
+            lambda d: d.current_url != first_url
+        )
+        target_url = driver.current_url
+        print(f"🎯 Son hedef URL: {target_url}")
+        
+        return target_url
+        
+    except Exception as e:
+        print(f"❌ Kritik hata: {str(e)}")
+        return None
 
-try:
-    # Bit.ly yönlendirmelerini bekle
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.XPATH, "//section[@class='links']"))
-    )
-    print("✅ Bit.ly yönlendirmeleri tamamlandı.")
+# Hedef URL'yi al
+target_url = get_target_url()
 
-    # İlk bağlantıyı bul ve tıkla
-    first_link = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
-    )
-    first_link_url = first_link.get_attribute('href')
-    print(f"🔗 İlk bağlantı: {first_link_url}")
-    first_link.click()
-    
-    # 9 saniyelik otomatik yönlendirmeyi bekle
-    print("⏳ 9 saniyelik yönlendirme bekleniyor...")
-    time.sleep(10)  # 9s + 1s güvenlik payı
-    
-    # Son hedef URL'yi al
-    target_url = driver.current_url
-    print(f"🎯 Hedef URL: {target_url}")
-
-except Exception as e:
-    print(f"❌ Hata: {str(e)}")
+if not target_url:
     driver.quit()
     exit()
 
-# Hedef sitede işlemler
+# 2. ADIM: Son hedef sitede işlemler
 try:
-    driver.get(target_url)  # Sayfayı yeniden yükle
+    print(f"🌍 Hedef siteye gidiliyor: {target_url}")
+    driver.get(target_url)
     
-    WebDriverWait(driver, 15).until(
-        EC.presence_of_element_located((By.TAG_NAME, "body"))
+    # Sayfanın tam yüklenmesini garanti altına al
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.TAG_NAME, 'body'))
     )
     
-    # Logo tıkla
-    WebDriverWait(driver, 10).until(
+    # Logo tıklama
+    WebDriverWait(driver, 15).until(
         EC.element_to_be_clickable((By.CSS_SELECTOR, "a.topLogo1"))
     ).click()
+    print("✅ Logoya tıklandı")
     
-    # Sayfayı kaydır
-    driver.execute_script("window.scrollTo(0, 600);")
+    # Sayfa pozisyonu ayarla
+    driver.execute_script("window.scrollTo(0, 700)")
     
-    # Video oynatıcıyı etkinleştir
+    # Video player'ı aktifleştir
     player = WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.ID, "player"))
     )
-    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth'});", player)
+    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", player)
     player.click()
+    print("▶️ Video oynatıcı aktif")
     
-    # Reklamı geç
-    WebDriverWait(driver, 15).until(
+    # Reklam geç butonu
+    WebDriverWait(driver, 20).until(
         EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'REKLAMI GEC')]"))
     ).click()
+    print("✅ Reklam geçildi")
 
 except Exception as e:
-    print(f"❌ Site işlem hatası: {str(e)}")
+    print(f"⚠️ İşlem hatası: {str(e)}")
 
-# M3U8 linklerini topla
-m3u8_urls = set()
+# 3. ADIM: M3U8 linklerini topla
+m3u8_links = set()
 try:
-    logs = driver.get_log("performance")
+    print("🔍 M3U8 linkleri aranıyor...")
+    logs = driver.get_log('performance')
     
     for entry in logs:
         try:
@@ -93,24 +113,26 @@ try:
             if log['method'] == 'Network.responseReceived':
                 url = log['params']['response']['url']
                 if '.m3u8' in url and 'video.twimg.com' not in url:
-                    m3u8_urls.add(url)
+                    m3u8_links.add(url)
         except:
             continue
-
+            
+    print(f"📥 {len(m3u8_links)} adet M3U8 linki bulundu")
+    
 except Exception as e:
-    print(f"❌ Log toplama hatası: {str(e)}")
+    print(f"❌ Log okuma hatası: {str(e)}")
 
-# HTML güncelleme
-if m3u8_urls:
+# 4. ADIM: HTML güncelleme
+if m3u8_links:
     try:
         with open('.index.html', 'r+', encoding='utf-8') as f:
             content = f.read()
             
             # exotrgoals1 güncelle
-            exo1 = "\n".join(
-                f"Lig Sports {i} HD | 1 {url.rsplit('/', 1)[0]}/yayinzirve.m3u8 {target_url}" 
-                for i, url in enumerate(m3u8_urls, 1)
-            )
+            exo1 = "\n".join([
+                f"Lig Sports {idx} HD | 1 {url.rsplit('/', 1)[0]}/yayinzirve.m3u8 {target_url}"
+                for idx, url in enumerate(m3u8_links, 1)
+            ])
             content = re.sub(
                 r'(<div class="exotrgoals1">).*?(</div>)',
                 rf'\1\n{exo1}\n\2',
@@ -119,10 +141,10 @@ if m3u8_urls:
             )
             
             # exotrgoals2 güncelle
-            exo2 = "\n".join(
-                f"Lig Sports {i} HD | 2 {url.rsplit('/', 1)[0]}/yayin1.m3u8 {target_url}"
-                for i, url in enumerate(m3u8_urls, 1)
-            )
+            exo2 = "\n".join([
+                f"Lig Sports {idx} HD | 2 {url.rsplit('/', 1)[0]}/yayin1.m3u8 {target_url}"
+                for idx, url in enumerate(m3u8_links, 1)
+            ])
             content = re.sub(
                 r'(<div class="exotrgoals2">).*?(</div>)',
                 rf'\1\n{exo2}\n\2',
@@ -132,11 +154,10 @@ if m3u8_urls:
             
             f.seek(0)
             f.write(content)
-            print("✅ HTML başarıyla güncellendi!")
+            f.truncate()
+            print("🔄 HTML başarıyla güncellendi")
             
     except Exception as e:
-        print(f"❌ Dosya hatası: {str(e)}")
-else:
-    print("⚠️ M3U8 linki bulunamadı!")
-
+        print(f"❌ Dosya işleme hatası: {str(e)}")
+        
 driver.quit()
