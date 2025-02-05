@@ -39,26 +39,20 @@ try:
 except Exception as e:
     print("❌ <div id='dqqqqq'> stil sıfırlanamadı:", e)
 
+
 # <div id="player"> öğesine tıkla
 try:
-    player_div = WebDriverWait(driver, 10).until(
+    player_div = WebDriverWait(driver, 5).until(
         EC.element_to_be_clickable((By.ID, "player"))
     )
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
+    
+    # 15 saniye bekle
+    time.sleep(15)
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
-
-# "REKLAMI GEÇ" butonuna tıklama
-try:
-    reklami_gec_button = WebDriverWait(driver, 8).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text()='REKLAMI GEÇ']"))
-    )
-    reklami_gec_button.click()
-    print("✅ 'REKLAMI GEÇ' butonuna tıklandı.")
-except Exception as e:
-    print("❌ 'REKLAMI GEÇ' butonuna tıklanamadı:", e)
 
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
