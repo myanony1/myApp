@@ -47,32 +47,29 @@ except Exception as e:
     print("❌ Sayfa kaydırılamadı:", e)
 
 
-# <div class="player-poster clickable" data-poster=""> öğesine tıklama
+# <div id="player"> öğesine tıkla
 try:
-    player_poster_div = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CLASS_NAME, "player-poster.clickable"))
+    player_div = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.ID, "player"))
     )
-    driver.execute_script("arguments[0].scrollIntoView(true);", player_poster_div)  # Öğeyi görünür hale getir
-    driver.execute_script("arguments[0].click();", player_poster_div)  # Öğeye tıkla
-    print("✅ <div class='player-poster clickable'> öğesine tıklandı.")
-    
-    # 8 saniye bekle
-    time.sleep(8)
+    driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
+    driver.execute_script("arguments[0].click();", player_div)
+    print("✅ <div id='player'> öğesine tıklandı.")
 except Exception as e:
-    print("❌ <div class='player-poster clickable'> öğesi tıklanamadı:", e)
+    print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
-# 'REKLAMI GEÇ' butonunu bul ve tıkla
+# 10 saniye bekle
+WebDriverWait(driver, 10).until(lambda driver: True)
+
+# "REKLAMI GEC" butonuna tıkla
 try:
-    skip_ad_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text()='REKLAMI GEÇ']"))
+    skip_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEÇ')]"))
     )
-    skip_ad_button.click()
-    print("✅ 'REKLAMI GEÇ' butonuna tıklandı.")
-    # 15 saniye bekle
-    time.sleep(15)
+    ActionChains(driver).move_to_element(skip_button).click().perform()
+    print("✅ 'REKLAMI GEC' butonuna tıklandı.")
 except Exception as e:
-    print("❌ 'REKLAMI GEÇ' butonuna tıklanamadı:", e)
-
+    print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
 m3u8_urls = set()
