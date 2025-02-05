@@ -42,6 +42,7 @@ except Exception as e:
 try:
     driver.execute_script("document.getElementById('dqqqqq').style = '';")
     print("✅ <div id='dqqqqq'> stil sıfırlandı.")
+    time.sleep(5)  # 5 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ <div id='dqqqqq'> stil sıfırlanamadı:", e)
 
@@ -53,7 +54,7 @@ try:
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
-    time.sleep(25)  # 25 saniye bekleme süresi eklendi
+    time.sleep(30)  # 30 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
@@ -67,11 +68,12 @@ for entry in logs:
         message = log_json.get("message", {})
         if message.get("method") == "Network.responseReceived":
             response_url = message.get("params", {}).get("response", {}).get("url", "")
+            print("Log Girdisi:", response_url)  # Tüm URL'leri yazdırarak incele
             if ".m3u8" in response_url and not response_url.startswith("https://video.twimg.com"):
                 m3u8_urls.add(response_url)
                 print("✅ .m3u8 URL bulundu:", response_url)  # Bu satırı ekledik
-    except Exception:
-        pass
+    except Exception as e:
+        print("Hata:", e)
 
 driver.quit()
 
