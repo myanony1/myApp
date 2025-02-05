@@ -5,7 +5,7 @@ on:
     branches-ignore: [ main ]  # This prevents the workflow from triggering on pushes to the main branch
   workflow_dispatch:
   schedule:
-    - cron: '0 */5 * * *'  # Every 3 hours
+    - cron: '0 */5 * * *'  # Every 5 hours
 
 jobs:
   extract:
@@ -13,6 +13,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
 
       - name: Set up Python
         uses: actions/setup-python@v4
@@ -22,8 +24,14 @@ jobs:
       - name: Install Python dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install selenium
-          pip install requests
+          pip install selenium requests
+
+      - name: Install Chrome
+        run: |
+          wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | sudo apt-key add -
+          sudo sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google-chrome.list'
+          sudo apt-get update
+          sudo apt-get install -y google-chrome-stable
 
       - name: Download ChromeDriver
         run: |
@@ -42,9 +50,17 @@ jobs:
           unzip chromedriver_linux64.zip -d .
           chmod +x chromedriver
 
+      - name: Add ChromeDriver to PATH
+        run: |
+          echo "$(pwd)" >> $GITHUB_PATH
+
       - name: Run extraction script
         run: |
           python extract.py
+
+      - name: Clean up
+        run: |
+          rm chromedriver_linux64.zip
 
       - name: Commit and push urls.html if changed
         uses: EndBug/add-and-commit@v9
