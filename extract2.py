@@ -37,16 +37,12 @@ try:
 except Exception as e:
     print("❌ Sayfa kaydırılamadı:", e)
 
-# <div id="dqqqqq"> öğesine tıkla
+# <div id="dqqqqq"> öğesinin stilini sıfırla
 try:
-    dqqqqq_div = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.ID, "dqqqqq"))
-    )
-    driver.execute_script("arguments[0].scrollIntoView(true);", dqqqqq_div)
-    driver.execute_script("arguments[0].click();", dqqqqq_div)
-    print("✅ <div id='dqqqqq'> öğesine tıklandı.")
+    driver.execute_script("document.getElementById('dqqqqq').style = '';")
+    print("✅ <div id='dqqqqq'> stil sıfırlandı.")
 except Exception as e:
-    print("❌ <div id='dqqqqq'> öğesi tıklanamadı:", e)
+    print("❌ <div id='dqqqqq'> stil sıfırlanamadı:", e)
 
 # <div id="player"> öğesine tıkla
 try:
