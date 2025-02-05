@@ -17,8 +17,43 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 # ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
+# Bit.ly URL'sine git
+initial_url = "https://bit.ly/m/taraftarium24w"
+driver.get(initial_url)
+
+# Bit.ly yönlendirmeleri sonrası sayfanın yüklenmesini bekle
+try:
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.XPATH, "//section[@class='links']"))
+    )
+    print("✅ Bit.ly yönlendirmeleri sonrası sayfa yüklendi.")
+except Exception as e:
+    print("❌ Bit.ly sonrası sayfa yüklenemedi:", e)
+
+# İlk bağlantıyı bul ve tıkla
+try:
+    first_link = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
+    )
+    first_link_url = first_link.get_attribute('href')
+    print(f"✅ İlk bağlantı bulundu: {first_link_url}")
+    first_link.click()
+    print("✅ İlk bağlantı tıklandı.")
+except Exception as e:
+    print("❌ İlk bağlantı bulunamadı veya tıklanamadı:", e)
+
+# Son yönlendirme URL'sini al
+try:
+    WebDriverWait(driver, 30).until(
+        lambda driver: driver.current_url != first_link_url
+    )
+    target_url = driver.current_url
+    print(f"✅ Son yönlendirme URL'si alındı: {target_url}")
+except Exception as e:
+    print("❌ Yönlendirme sonrası URL değişmedi:", e)
+    target_url = driver.current_url
+
 # Hedef URL'yi aç
-target_url = "http://trgoals1152.xyz/"
 driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
@@ -29,7 +64,7 @@ try:
     print("✅ Sayfa tamamen yüklendi.")
 except Exception as e:
     print("❌ Sayfa yüklenemedi:", e)
-
+    
 # <a> öğesini tıklamak (logo)
 try:
     logo_link = WebDriverWait(driver, 10).until(
