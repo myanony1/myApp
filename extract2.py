@@ -47,9 +47,11 @@ try:
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
-    time.sleep(15)  # 15 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
+
+# 10 saniye bekle
+WebDriverWait(driver, 10).until(lambda driver: True)
 
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
