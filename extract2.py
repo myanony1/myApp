@@ -18,7 +18,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
-target_url = "https://sonbahistv5.pages.dev"
+target_url = "https://taraffco6.baby/"
 driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
@@ -48,20 +48,17 @@ try:
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
-# 10 saniye bekle
-WebDriverWait(driver, 10).until(lambda driver: True)
-
 # "REKLAMI GEC" butonuna tıkla
 try:
     skip_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEC')]"))
-    )
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEC')]")
+    ))
     ActionChains(driver).move_to_element(skip_button).click().perform()
     print("✅ 'REKLAMI GEC' butonuna tıklandı.")
 except Exception as e:
     print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
 
-# .m3u8 linklerini çekme (video.twimg.com dışındakiler)
+# .m3u8 linklerini çekme
 logs = driver.get_log("performance")
 m3u8_urls = set()
 
@@ -74,35 +71,45 @@ for entry in logs:
             if ".m3u8" in response_url and not response_url.startswith("https://video.twimg.com"):
                 m3u8_urls.add(response_url)
     except Exception:
-        pass  # Hataları yoksay
+        pass
 
 driver.quit()
 
-# URLs'yi alıp exoligB içeriğini oluştur
-new_content_exoligB = "\n".join(
-    [f"Lig Sports {index} HD | 3 {url.replace(url.split('/')[-1], 'yayinzirve.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
-)
+# Güncellenmiş class isimleri ve URL değişiklikleri
+exolig_classes = {
+    "exoligbir3": "yayinstar.m3u8",
+    "exolig2": "yayinb2.m3u8",
+    "exolig3": "yayinb3.m3u8",
+    "exolig4": "yayinb4.m3u8",
+    "exolig5": "yayinb5.m3u8",
+}
 
-# HTML dosyasını aç ve sadece exoligB div içeriğini değiştir
+# HTML dosyasını aç ve içeriği güncelle
 try:
     with open(".index.html", "r", encoding="utf-8") as f:
         content = f.read()
 
-    # Sadece içeriği değiştirmek için regex ile güncelleme yapıyoruz
-    updated_content = re.sub(
-        r'(<div class=[\'"]exoligB[\'"][^>]*>)(.*?)(</div>)',
-        rf'\1\n{new_content_exoligB}\n\3',
-        content,
-        flags=re.DOTALL
-    )
+    for class_name, url_suffix in exolig_classes.items():
+        new_content = "\n".join(
+            [f"Lig Sports {index} HD | 3 {url.replace(url.split('/')[-1], url_suffix)} {target_url}" 
+             for index, url in enumerate(m3u8_urls, start=1)]
+        )
+        
+        # Sınıfa göre içeriği değiştir
+        updated_content = re.sub(
+            rf'(<div class=[\'\"]{class_name}[\'\"][^>]*>)(.*?)(</div>)',
+            rf'\1\n{new_content}\n\3',
+            content,
+            flags=re.DOTALL
+        )
 
     # Eğer içerik değiştiyse dosyayı güncelle
     if updated_content != content:
         with open(".index.html", "w", encoding="utf-8") as f:
             f.write(updated_content)
-        print("✅ exoligB div içeriği güncellendi.")
+        print(f"✅ {', '.join(exolig_classes.keys())} div içerikleri güncellendi.")
     else:
-        print("ℹ️ exoligB içeriği zaten güncel.")
+        print("ℹ️ İçerik zaten güncel.")
     
 except FileNotFoundError:
     print("❌ Hata: .index.html dosyası bulunamadı.")
