@@ -95,13 +95,14 @@ try:
     with open(".index.html", "r", encoding="utf-8") as f:
         content = f.read()
 
+    # Sadece var olan div'lerin içeriğini güncelle
     for class_name, url_suffix in exolig_classes.items():
-        new_content = f"<div class='{class_name}' style='display:none'>\n  Lig Sports HD | 3 {domain}/list/{url_suffix} {target_url}\n</div>"
+        updated_content = f"  Lig Sports HD | 3 {domain}/list/{url_suffix} {target_url}\n"
         
-        # Sınıfa göre içeriği değiştir
+        # Div içeriğini değiştir
         content = re.sub(
             rf'(<div class=[\'\"]{class_name}[\'\"][^>]*>)(.*?)(</div>)',
-            rf'\1\n{new_content}\n\3',
+            rf'\1\n{updated_content}\n\3',
             content,
             flags=re.DOTALL
         )
