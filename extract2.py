@@ -18,7 +18,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
-target_url = "https://taraffco6.baby/"
+target_url = "https://popk24.cfd/channel.html?id=yayinstar"
 driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
@@ -42,6 +42,7 @@ except Exception as e:
 try:
     driver.execute_script("window.scrollTo(0, 500);")
     print("✅ Sayfa kaydırıldı.")
+    time.sleep(3)  # 3 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ Sayfa kaydırılamadı:", e)
 
@@ -62,12 +63,12 @@ WebDriverWait(driver, 10).until(lambda driver: True)
 # "REKLAMI GEC" butonuna tıkla
 try:
     skip_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEC')]"))
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEÇ')]"))
     )
     ActionChains(driver).move_to_element(skip_button).click().perform()
-    print("✅ 'REKLAMI GEC' butonuna tıklandı.")
+    print("✅ 'REKLAMI GEÇ' butonuna tıklandı.")
 except Exception as e:
-    print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
+    print("❌ 'REKLAMI GEÇ' butonu bulunamadı veya tıklanamadı:", e)
 
 
 # .m3u8 linklerini çekme
