@@ -50,8 +50,19 @@ try:
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
-# 10 saniye bekle
-WebDriverWait(driver, 10).until(lambda driver: True)
+# 9 saniye bekle
+time.sleep(9)
+
+# <button type="button"> öğesine tıkla
+try:
+    button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[@type='button']"))
+    )
+    button.click()
+    print("✅ <button type='button'> öğesine tıklandı.")
+except Exception as e:
+    print("❌ <button type='button'> öğesi tıklanamadı:", e)
+
 
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
@@ -75,8 +86,8 @@ driver.quit()
 # Dinamik olarak ana domaini belirle
 domain = ""
 if m3u8_urls:
-    sample_url = next(iter(m3u8_urls))
-    domain = "/".join(sample_url.split("/")[:3])  # Ana domaini al
+    sample_url = next(iter(m3u8_urls))  # Set'ten bir URL seç
+    domain = "/".join(sample_url.split("/")[:3])  # URL'yi parçalayarak domaini al
 
 # Güncellenmiş class isimleri ve URL değişiklikleri
 exolig_classes = {
