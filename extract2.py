@@ -1,5 +1,6 @@
 import json
 import re
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -52,6 +53,7 @@ try:
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
+    time.sleep(15)  # 15 saniye bekle
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
