@@ -1,12 +1,22 @@
 import json
-import requests
 import re
+import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+
+# Kısaltılmış URL'nin yönlendirdiği son URL'yi al
+short_url = "https://t.ly/_u07W"
+try:
+    response = requests.get(short_url, allow_redirects=True)
+    target_url = response.url
+    print(f"✅ Yönlendirilen son URL: {target_url}")
+except Exception as e:
+    print(f"❌ Yönlendirme hatası: {e}")
+    exit()
 
 # Chrome seçeneklerini ayarla
 chrome_options = Options()
@@ -18,24 +28,8 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 # ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
-# Kısaltılmış URL'nin yönlendirdiği son URL'yi al
-short_url = "https://t.ly/_u07W"
-response = requests.get(short_url, allow_redirects=True)
-target_url = response.url
-print("Yönlendirilen URL:", target_url)
-
-# Chrome seçeneklerini ayarla
-chrome_options = Options()
-chrome_options.add_argument('--headless')  # Arka planda çalıştır
-chrome_options.add_argument('--disable-gpu')
-chrome_options.add_argument('--no-sandbox')
-
-# ChromeDriver'ı başlat
-driver = webdriver.Chrome(options=chrome_options)
-
 # Hedef URL'yi aç
 driver.get(target_url)
-print("Sayfa açıldı:", driver.title)
 
 # Sayfanın tamamen yüklenmesini bekle
 try:
