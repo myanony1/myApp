@@ -40,7 +40,7 @@ except Exception as e:
 
 # Güncellenmiş class isimleri ve URL değişiklikleri
 exolig_classes = {
-    "exoligbir3": ("Lig Sports HD | 3", "yayinstar.m3u8"),
+    "exoligbir3": ("Lig Sports 1 HD | 3", "yayinstar.m3u8"),
     "exolig2": ("Lig Sports 2 HD", "yayinb2.m3u8"),
     "exolig3": ("Lig Sports 3 HD", "yayinb3.m3u8"),
     "exolig4": ("Lig Sports 4 HD", "yayinb4.m3u8"),
