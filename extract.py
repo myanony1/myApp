@@ -43,24 +43,18 @@ try:
     # İlk yönlendirmeyi bekle
     WebDriverWait(driver, 10).until(lambda d: d.current_url != first_target_url)
     second_target_url = driver.current_url
+    driver.get(second_target_url)
     print(f"✅ İkinci yönlendirme tamamlandı, yeni URL: {second_target_url}")
 
-    # İkinci yönlendirmeden sonra, sayfanın tamamen yüklenmesini bekliyoruz
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.TAG_NAME, "body"))
-    )
-
-    # Şimdi ikinci URL'ye tıklayıp yönlendirilmesini bekliyoruz
+    # İkinci yönlendirilmiş URL'ye tıklıyoruz
     driver.get(second_target_url)
-    print(f"✅ İkinci yönlendirilmiş URL'ye tıklandı, yeni URL: {second_target_url}")
+    print(f"✅ İkinci yönlendirilmiş URL'ye tıklanarak gidildi, yeni URL: {second_target_url}")
 
-    # Sayfanın tamamen yüklenmesini bekle
-    WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.TAG_NAME, "body"))
-    )
+    # Sayfanın tamamen yüklenmesini bekleyin (30 saniye)
+    time.sleep(10)  # 10 saniye bekleyin, gerektiği şekilde artırabilirsiniz
 
     # Sonraki yönlendirmeyi takip et ve en son yönlendirilmiş URL'yi target_url olarak ayarla
-    target_url = driver.current_url  # Bu, son açılan URL olacak
+    target_url = driver.current_url  # Bu, en son açılan URL olacak
     print(f"✅ En son yönlendirilmiş URL: {target_url}")
 
 except Exception as e:
