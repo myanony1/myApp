@@ -17,18 +17,40 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 # ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
-# Hedef URL'yi aç
-target_url = "http://trgoals1152.xyz/"
-driver.get(target_url)
+# İlk URL'yi aç
+initial_url = "https://bit.ly/m/taraftarium24w"
+driver.get(initial_url)
 
 # Sayfanın tamamen yüklenmesini bekle
 try:
     WebDriverWait(driver, 30).until(
         EC.presence_of_element_located((By.TAG_NAME, "body"))
     )
-    print("✅ Sayfa tamamen yüklendi.")
+    print("✅ İlk sayfa tamamen yüklendi.")
 except Exception as e:
-    print("❌ Sayfa yüklenemedi:", e)
+    print("❌ İlk sayfa yüklenemedi:", e)
+
+# İlk bağlantıyı tıkla ve yeni URL'yi al
+try:
+    first_link = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
+    )
+    target_url = first_link.get_attribute("href")  # Yeni hedef URL'yi al
+    driver.get(target_url)  # Yeni hedef URL'ye git
+    print(f"✅ İlk bağlantıya tıklandı, yeni URL: {target_url}")
+except Exception as e:
+    print("❌ İlk bağlantıya tıklanamadı:", e)
+    driver.quit()
+    exit()
+
+# Sayfanın tamamen yüklenmesini bekle
+try:
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.TAG_NAME, "body"))
+    )
+    print("✅ Yeni sayfa tamamen yüklendi.")
+except Exception as e:
+    print("❌ Yeni sayfa yüklenemedi:", e)
 
 # <a> öğesini tıklamak (logo)
 try:
