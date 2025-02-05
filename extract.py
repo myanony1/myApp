@@ -51,7 +51,12 @@ try:
 
     # İkinci yönlendirme sonrası, üçüncü yönlendirmeyi takip et
     WebDriverWait(driver, 10).until(lambda d: d.current_url != second_target_url)
-    final_target_url = driver.current_url  # Son yönlendirilmiş URL
+    third_target_url = driver.current_url  # Son yönlendirilmiş URL
+    driver.get(third_target_url)
+    print(f"✅ Üçüncü yönlendirme tamamlandı, yeni URL: {third_target_url}")
+
+    # En son yönlendirilmiş URL'yi al
+    final_target_url = driver.current_url
     print(f"✅ En son yönlendirilmiş URL: {final_target_url}")
 
 except Exception as e:
