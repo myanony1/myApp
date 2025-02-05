@@ -49,20 +49,10 @@ try:
     driver.execute_script("arguments[0].click();", player_poster_div)  # Öğeye tıkla
     print("✅ <div class='player-poster clickable'> öğesine tıklandı.")
     
-    # 8 saniye bekle
-    time.sleep(8)
+    # 20 saniye bekle
+    time.sleep(20)
 except Exception as e:
     print("❌ <div class='player-poster clickable'> öğesi tıklanamadı:", e)
-
-# "REKLAMI GEÇ" butonuna tıkla
-try:
-    reklami_gec_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[text()='REKLAMI GEÇ']"))
-    )
-    reklami_gec_button.click()
-    print("✅ 'REKLAMI GEÇ' butonuna tıklandı.")
-except Exception as e:
-    print("❌ 'REKLAMI GEÇ' butonuna tıklanamadı:", e)
 
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
@@ -75,11 +65,13 @@ for entry in logs:
         if message.get("method") == "Network.responseReceived":
             response_url = message.get("params", {}).get("response", {}).get("url", "")
             print("Log Girdisi:", response_url)  # Tüm URL'leri yazdırarak incele
+            # Filtreleme işlemi burada
             if ".m3u8" in response_url and not response_url.startswith("https://video.twimg.com"):
                 m3u8_urls.add(response_url)
                 print("✅ .m3u8 URL bulundu:", response_url)
     except Exception as e:
         print("Hata:", e)
+
 
 driver.quit()
 
