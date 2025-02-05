@@ -53,19 +53,19 @@ try:
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
-    time.sleep(10)  # 10 saniye bekleme süresi eklendi
+    time.sleep(11)  # 11 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
-# "REKLAMI GEC" butonuna tıkla
+# "REKLAMI GEC" yerine <div data-adv=""> öğesine tıkla
 try:
-    skip_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEC')]")
-    ))
-    ActionChains(driver).move_to_element(skip_button).click().perform()
-    print("✅ 'REKLAMI GEC' butonuna tıklandı.")
+    adv_div = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//div[@data-adv='']"))
+    )
+    ActionChains(driver).move_to_element(adv_div).click().perform()
+    print("✅ '<div data-adv=\"\">' öğesine tıklandı.")
 except Exception as e:
-    print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
+    print("❌ '<div data-adv=\"\">' öğesi bulunamadı veya tıklanamadı:", e)
 
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
