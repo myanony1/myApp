@@ -1,10 +1,10 @@
+# Chrome ve Selenium kodu
 import json
 import re
 import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
@@ -49,7 +49,6 @@ try:
     print("✅ <div id='player'> öğesine tıklandı.")
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
-    
 
 # "REKLAMI GEÇ" butonuna tıklama
 try:
@@ -60,7 +59,6 @@ try:
     print("✅ 'REKLAMI GEÇ' butonuna tıklandı.")
 except Exception as e:
     print("❌ 'REKLAMI GEÇ' butonuna tıklanamadı:", e)
-
 
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
@@ -86,6 +84,7 @@ domain = ""
 if m3u8_urls:
     sample_url = next(iter(m3u8_urls))  # Set'ten bir URL seç
     domain = "/".join(sample_url.split("/")[:3])  # URL'yi parçalayarak domaini al
+    print(f"✅ Domain alındı: {domain}")  # Domaini yazdır
 
 # Güncellenmiş class isimleri ve URL değişiklikleri
 exolig_classes = {
