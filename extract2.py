@@ -49,6 +49,7 @@ try:
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
+time.sleep(10)
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
