@@ -39,9 +39,6 @@ try:
     driver.get(first_target_url)  # Yeni URL'ye git
     print(f"✅ İlk bağlantıya tıklandı, yeni URL: {first_target_url}")
 
-    # 30 saniye bekle
-    time.sleep(30)
-
     # Sayfanın tekrar yönlendirilmesini bekle
     WebDriverWait(driver, 10).until(lambda d: d.current_url != first_target_url)
     target_url = driver.current_url  # Son yönlendirilmiş URL'yi al
