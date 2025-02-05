@@ -67,7 +67,7 @@ for entry in logs:
             print("Log Girdisi:", response_url)  # Tüm URL'leri yazdırarak incele
             if ".m3u8" in response_url and not response_url.startswith("https://video.twimg.com"):
                 m3u8_urls.add(response_url)
-                print("✅ .m3u8 URL bulundu:", response_url)  # Bu satırı ekledik
+                print("✅ .m3u8 URL bulundu:", response_url)
     except Exception as e:
         print("Hata:", e)
 
@@ -77,22 +77,8 @@ driver.quit()
 domain = ""
 if m3u8_urls:
     sample_url = next(iter(m3u8_urls))  # Set'ten bir URL seç
-    domain = f"{sample_url.split('//')[0]}//{sample_url.split('/')[2]}/"  # Domaini formatla: https://hedef/
+    domain = "/".join(sample_url.split("/")[:3])  # URL'yi parçalayarak domaini al
     print(f"✅ Domain alındı: {domain}")  # Domaini yazdır
-
-    # Artık domain ile m3u8 URL'sinin tam halini oluşturabilirsiniz
-    for class_name, url_suffix in exolig_classes.items():
-        full_url = f"{domain}list/{url_suffix}"  # Tam URL'yi oluştur
-        updated_content = f"  Lig Sports HD | 3 {full_url} {target_url}\n"
-        
-        # Div içeriğini değiştir
-        content = re.sub(
-            rf'(<div class=[\'\"]{class_name}[\'\"][^>]*>)(.*?)(</div>)',
-            rf'\1\n{updated_content}\n\3',
-            content,
-            flags=re.DOTALL
-        )
-
 
 # Güncellenmiş class isimleri ve URL değişiklikleri
 exolig_classes = {
@@ -110,7 +96,11 @@ try:
 
     # Sadece var olan div'lerin içeriğini güncelle
     for class_name, url_suffix in exolig_classes.items():
-        updated_content = f"  Lig Sports HD | 3 {domain}/list/{url_suffix} {target_url}\n"
+        # Tam URL'yi oluştur
+        full_url = f"{domain}/list/{url_suffix}"  # Dinamik olarak domain ve URL'yi birleştir
+        
+        # Div içeriğini güncelle
+        updated_content = f"  Lig Sports HD | 3 {full_url} {target_url}\n"
         
         # Div içeriğini değiştir
         content = re.sub(
@@ -129,3 +119,4 @@ except FileNotFoundError:
     print("❌ Hata: .index.html dosyası bulunamadı.")
 except Exception as e:
     print(f"❌ Dosya güncellenirken hata oluştu: {e}")
+
