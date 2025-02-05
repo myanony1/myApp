@@ -1,5 +1,6 @@
 import json
 import re
+import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -30,32 +31,36 @@ try:
 except Exception as e:
     print("❌ İlk sayfa yüklenemedi:", e)
 
-# İlk bağlantıyı tıkla ve yeni URL'yi al
+# İlk bağlantıyı tıkla ve yönlendirmeleri takip et
 try:
     first_link = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
     )
     first_target_url = first_link.get_attribute("href")
-driver.get(first_target_url)
+    driver.get(first_target_url)
+    print(f"✅ İlk bağlantıya tıklandı, yeni URL: {first_target_url}")
 
-# Sayfanın yönlendirilmesini bekle ve yeni URL'yi al
-WebDriverWait(driver, 10).until(lambda d: d.current_url != first_target_url)
-second_target_url = driver.current_url
-driver.get(second_target_url)
+    # İlk yönlendirmeyi bekle
+    WebDriverWait(driver, 10).until(lambda d: d.current_url != first_target_url)
+    second_target_url = driver.current_url
+    driver.get(second_target_url)
+    print(f"✅ İkinci yönlendirme tamamlandı, yeni URL: {second_target_url}")
 
-# 30 saniye bekle (Sayfanın tekrar yönlenmesi için)
-time.sleep(30)
+    # 30 saniye bekle (Sonraki yönlendirmeleri takip etmek için)
+    time.sleep(30)
 
-# En son yönlendirilmiş URL'yi al
-WebDriverWait(driver, 10).until(lambda d: d.current_url != second_target_url)
-final_target_url = driver.current_url
+    # En son yönlendirilmiş URL'yi al
+    WebDriverWait(driver, 10).until(lambda d: d.current_url != second_target_url)
+    final_target_url = driver.current_url
+    print(f"✅ En son yönlendirilmiş URL: {final_target_url}")
 
-print(f"✅ En son yönlendirilmiş URL: {final_target_url}")
+except Exception as e:
+    print("❌ Bağlantıya tıklanamadı veya yönlendirme başarısız:", e)
     driver.quit()
     exit()
 
 # Yeni hedef URL'ye git
-driver.get(target_url)
+driver.get(final_target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
 try:
@@ -126,10 +131,10 @@ driver.quit()
 
 # URLs'yi alıp exotrgoals1 ve exotrgoals2 içeriğini oluştur
 new_content_exotrgoals1 = "\n".join(
-    [f"Lig Sports {index} HD | 1 {url.replace(url.split('/')[-1], 'yayinzirve.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
+    [f"Lig Sports {index} HD | 1 {url.replace(url.split('/')[-1], 'yayinzirve.m3u8')} {final_target_url}" for index, url in enumerate(m3u8_urls, start=1)]
 )
 new_content_exotrgoals2 = "\n".join(
-    [f"Lig Sports {index} HD | 2 {url.replace(url.split('/')[-1], 'yayin1.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
+    [f"Lig Sports {index} HD | 2 {url.replace(url.split('/')[-1], 'yayin1.m3u8')} {final_target_url}" for index, url in enumerate(m3u8_urls, start=1)]
 )
 
 # HTML dosyasını aç ve sadece mevcut div içeriğini değiştir
