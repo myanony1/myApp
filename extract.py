@@ -30,18 +30,25 @@ try:
 except Exception as e:
     print("❌ İlk sayfa yüklenemedi:", e)
 
-# İlk bağlantıyı tıkla ve yeni URL'yi al
+# "links" classındaki ilk bağlantıyı bul ve tıkla
 try:
     first_link = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
+        EC.element_to_be_clickable((By.CSS_SELECTOR, ".links a"))
     )
-    target_url = first_link.get_attribute("href")  # Yeni hedef URL'yi al
-    driver.get(target_url)  # Yeni hedef URL'ye git
-    print(f"✅ İlk bağlantıya tıklandı, yeni URL: {target_url}")
+    first_link.click()
+    print("✅ 'links' sınıfındaki ilk bağlantıya tıklandı.")
+
+    # Sayfanın yönlendirilmesini bekle ve yeni URL'yi al
+    WebDriverWait(driver, 10).until(lambda d: d.current_url != initial_url)
+    target_url = driver.current_url  # En son yönlendirilmiş URL
+    print(f"✅ Yönlendirme tamamlandı, yeni target_url: {target_url}")
 except Exception as e:
-    print("❌ İlk bağlantıya tıklanamadı:", e)
+    print("❌ 'links' bağlantısı tıklanamadı veya yönlendirme başarısız:", e)
     driver.quit()
     exit()
+
+# Yeni hedef URL'ye git
+driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
 try:
