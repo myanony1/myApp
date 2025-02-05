@@ -18,7 +18,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
-target_url = "https://taraffco6.baby/"
+target_url = "https://popk24.cfd/channel.html?id=yayinstar"
 driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
