@@ -1,4 +1,5 @@
 import json
+import requests
 import re
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
