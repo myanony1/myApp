@@ -32,6 +32,7 @@ except Exception as e:
     print("❌ İlk sayfa yüklenemedi:", e)
 
 # İlk bağlantıyı tıkla ve yönlendirmeleri takip et
+# İlk bağlantıyı tıkla ve yönlendirmeleri takip et
 try:
     first_link = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
@@ -46,10 +47,14 @@ try:
     driver.get(second_target_url)
     print(f"✅ İkinci yönlendirme tamamlandı, yeni URL: {second_target_url}")
 
+    # Burada ikinci yönlendirmeden sonra yeni URL'ye gidiyoruz ve target_url olarak atıyoruz
+    target_url = driver.current_url
+    print(f"✅ Yeni hedef URL: {target_url}")
+
     # 30 saniye bekle (Sonraki yönlendirmeleri takip etmek için)
     time.sleep(30)
 
-    # İkinci yönlendirme sonrası, üçüncü yönlendirmeyi takip et
+    # Üçüncü yönlendirmeyi takip et
     WebDriverWait(driver, 10).until(lambda d: d.current_url != second_target_url)
     third_target_url = driver.current_url  # Son yönlendirilmiş URL
     driver.get(third_target_url)
