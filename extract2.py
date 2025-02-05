@@ -49,13 +49,11 @@ try:
     print("✅ <div id='player'> öğesine tıklandı.")
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
-
-# 9 saniye bekle
-time.sleep(9)
+    
 
 # "REKLAMI GEÇ" butonuna tıklama
 try:
-    reklami_gec_button = WebDriverWait(driver, 10).until(
+    reklami_gec_button = WebDriverWait(driver, 8).until(
         EC.element_to_be_clickable((By.XPATH, "//button[text()='REKLAMI GEÇ']"))
     )
     reklami_gec_button.click()
