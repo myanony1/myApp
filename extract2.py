@@ -49,10 +49,22 @@ try:
     driver.execute_script("arguments[0].click();", player_poster_div)  # Öğeye tıkla
     print("✅ <div class='player-poster clickable'> öğesine tıklandı.")
     
-    # 35 saniye bekle
-    time.sleep(35)
+    # 8 saniye bekle
+    time.sleep(8)
 except Exception as e:
     print("❌ <div class='player-poster clickable'> öğesi tıklanamadı:", e)
+
+# 'REKLAMI GEÇ' butonunu bul ve tıkla
+try:
+    skip_ad_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[text()='REKLAMI GEÇ']"))
+    )
+    skip_ad_button.click()
+    print("✅ 'REKLAMI GEÇ' butonuna tıklandı.")
+    # 15 saniye bekle
+    time.sleep(15)
+except Exception as e:
+    print("❌ 'REKLAMI GEÇ' butonuna tıklanamadı:", e)
 
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
