@@ -19,40 +19,40 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
-target_url = "https://taraffco6.baby/"
+target_url = "https://popk24.cfd/channel.html?id=yayinstar"
 driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
 try:
-    WebDriverWait(driver, 20).until(
+    WebDriverWait(driver, 10).until(
         EC.presence_of_element_located((By.TAG_NAME, "body"))
     )
     print("✅ Sayfa tamamen yüklendi.")
 except Exception as e:
     print("❌ Sayfa yüklenemedi:", e)
 
-# <div id="dqqqqq"> öğesinin stilini sıfırla
+# <div id="dqqqqq"> öğesini sayfadan sil
 try:
-    driver.execute_script("document.getElementById('dqqqqq').style = '';")
-    print("✅ <div id='dqqqqq'> stil sıfırlandı.")
+    driver.execute_script("var element = document.getElementById('dqqqqq'); if(element) { element.remove(); }")
+    print("✅ <div id='dqqqqq'> öğesi sayfadan silindi.")
     time.sleep(3)  # 3 saniye bekleme süresi eklendi
 except Exception as e:
-    print("❌ <div id='dqqqqq'> stil sıfırlanamadı:", e)
+    print("❌ <div id='dqqqqq'> öğesi sayfadan silinemedi:", e)
 
 
-# <div id="player"> öğesine tıkla
+# <div class="player-poster clickable" data-poster=""> öğesine tıklama
 try:
-    player_div = WebDriverWait(driver, 5).until(
-        EC.element_to_be_clickable((By.ID, "player"))
+    player_poster_div = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CLASS_NAME, "player-poster.clickable"))
     )
-    driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
-    driver.execute_script("arguments[0].click();", player_div)
-    print("✅ <div id='player'> öğesine tıklandı.")
+    driver.execute_script("arguments[0].scrollIntoView(true);", player_poster_div)  # Öğeyi görünür hale getir
+    driver.execute_script("arguments[0].click();", player_poster_div)  # Öğeye tıkla
+    print("✅ <div class='player-poster clickable'> öğesine tıklandı.")
     
-    # 30 saniye bekle
-    time.sleep(30)
+    # 15 saniye bekle
+    time.sleep(15)
 except Exception as e:
-    print("❌ <div id='player'> öğesi tıklanamadı:", e)
+    print("❌ <div class='player-poster clickable'> öğesi tıklanamadı:", e)
 
 # .m3u8 linklerini çekme
 logs = driver.get_log("performance")
