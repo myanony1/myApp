@@ -35,16 +35,22 @@ try:
     first_link = WebDriverWait(driver, 10).until(
         EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
     )
-    first_target_url = first_link.get_attribute("href")  # İlk yönlendirme URL'sini al
-    driver.get(first_target_url)  # Yeni URL'ye git
-    print(f"✅ İlk bağlantıya tıklandı, yeni URL: {first_target_url}")
+    first_target_url = first_link.get_attribute("href")
+driver.get(first_target_url)
 
-    # Sayfanın tekrar yönlendirilmesini bekle
-    WebDriverWait(driver, 10).until(lambda d: d.current_url != first_target_url)
-    target_url = driver.current_url  # Son yönlendirilmiş URL'yi al
-    print(f"✅ İkinci yönlendirme tamamlandı, yeni target_url: {target_url}")
-except Exception as e:
-    print("❌ İlk bağlantıya tıklanamadı veya yönlendirme başarısız:", e)
+# Sayfanın yönlendirilmesini bekle ve yeni URL'yi al
+WebDriverWait(driver, 10).until(lambda d: d.current_url != first_target_url)
+second_target_url = driver.current_url
+driver.get(second_target_url)
+
+# 30 saniye bekle (Sayfanın tekrar yönlenmesi için)
+time.sleep(30)
+
+# En son yönlendirilmiş URL'yi al
+WebDriverWait(driver, 10).until(lambda d: d.current_url != second_target_url)
+final_target_url = driver.current_url
+
+print(f"✅ En son yönlendirilmiş URL: {final_target_url}")
     driver.quit()
     exit()
 
