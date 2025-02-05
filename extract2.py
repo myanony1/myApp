@@ -86,11 +86,11 @@ driver.quit()
 
 # Güncellenmiş class isimleri ve URL değişiklikleri
 exolig_classes = {
-    "exoligbir3": "yayinstar.m3u8",
-    "exolig2": "yayinb2.m3u8",
-    "exolig3": "yayinb3.m3u8",
-    "exolig4": "yayinb4.m3u8",
-    "exolig5": "yayinb5.m3u8",
+    "exoligbir3": "list/yayinstar.m3u8",
+    "exolig2": "list/yayinb2.m3u8",
+    "exolig3": "list/yayinb3.m3u8",
+    "exolig4": "list/yayinb4.m3u8",
+    "exolig5": "list/yayinb5.m3u8",
 }
 
 # HTML dosyasını aç ve içeriği güncelle
