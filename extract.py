@@ -1,22 +1,11 @@
 import json
 import re
-import requests
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-
-# Kısaltılmış URL'nin yönlendirdiği son URL'yi al
-short_url = "https://t.ly/_u07W"
-try:
-    response = requests.get(short_url, allow_redirects=True)
-    target_url = response.url
-    print(f"✅ Yönlendirilen son URL: {target_url}")
-except Exception as e:
-    print(f"❌ Yönlendirme hatası: {e}")
-    exit()
 
 # Chrome seçeneklerini ayarla
 chrome_options = Options()
@@ -29,6 +18,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Hedef URL'yi aç
+target_url = "http://trgoals1152.xyz/"
 driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
