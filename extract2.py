@@ -69,6 +69,7 @@ for entry in logs:
             response_url = message.get("params", {}).get("response", {}).get("url", "")
             if ".m3u8" in response_url and not response_url.startswith("https://video.twimg.com"):
                 m3u8_urls.add(response_url)
+                print("✅ .m3u8 URL bulundu:", response_url)  # Bu satırı ekledik
     except Exception:
         pass
 
