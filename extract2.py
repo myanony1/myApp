@@ -24,25 +24,18 @@ driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
 try:
-    WebDriverWait(driver, 30).until(
+    WebDriverWait(driver, 20).until(
         EC.presence_of_element_located((By.TAG_NAME, "body"))
     )
     print("✅ Sayfa tamamen yüklendi.")
 except Exception as e:
     print("❌ Sayfa yüklenemedi:", e)
 
-# Sayfayı kaydır
-try:
-    driver.execute_script("window.scrollTo(0, 500);")
-    print("✅ Sayfa kaydırıldı.")
-except Exception as e:
-    print("❌ Sayfa kaydırılamadı:", e)
-
 # <div id="dqqqqq"> öğesinin stilini sıfırla
 try:
     driver.execute_script("document.getElementById('dqqqqq').style = '';")
     print("✅ <div id='dqqqqq'> stil sıfırlandı.")
-    time.sleep(5)  # 5 saniye bekleme süresi eklendi
+    time.sleep(3)  # 3 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ <div id='dqqqqq'> stil sıfırlanamadı:", e)
 
@@ -54,7 +47,7 @@ try:
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
-    time.sleep(60)  # 60 saniye bekleme süresi eklendi
+    time.sleep(15)  # 15 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
