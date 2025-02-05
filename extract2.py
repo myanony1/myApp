@@ -37,6 +37,17 @@ try:
 except Exception as e:
     print("❌ Sayfa kaydırılamadı:", e)
 
+# <div id="dqqqqq"> öğesine tıkla
+try:
+    dqqqqq_div = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.ID, "dqqqqq"))
+    )
+    driver.execute_script("arguments[0].scrollIntoView(true);", dqqqqq_div)
+    driver.execute_script("arguments[0].click();", dqqqqq_div)
+    print("✅ <div id='dqqqqq'> öğesine tıklandı.")
+except Exception as e:
+    print("❌ <div id='dqqqqq'> öğesi tıklanamadı:", e)
+
 # <div id="player"> öğesine tıkla
 try:
     player_div = WebDriverWait(driver, 10).until(
