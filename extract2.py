@@ -40,11 +40,11 @@ except Exception as e:
 
 # Güncellenmiş class isimleri ve URL değişiklikleri
 exolig_classes = {
-    "exoligbir3": "yayinstar.m3u8",
-    "exolig2": "yayinb2.m3u8",
-    "exolig3": "yayinb3.m3u8",
-    "exolig4": "yayinb4.m3u8",
-    "exolig5": "yayinb5.m3u8",
+    "exoligbir3": ("Lig Sports HD | 3", "yayinstar.m3u8"),
+    "exolig2": ("Lig Sports 2 HD", "yayinb2.m3u8"),
+    "exolig3": ("Lig Sports 3 HD", "yayinb3.m3u8"),
+    "exolig4": ("Lig Sports 4 HD", "yayinb4.m3u8"),
+    "exolig5": ("Lig Sports 5 HD", "yayinb5.m3u8"),
 }
 
 # HTML dosyasını aç ve içeriği güncelle
@@ -53,14 +53,14 @@ try:
         content = f.read()
 
     # Sadece var olan div'lerin içeriğini güncelle
-    for class_name, url_suffix in exolig_classes.items():
+    for class_name, (lig_sports_name, url_suffix) in exolig_classes.items():
         # Tam URL'yi oluştur
         full_url = f"{base_url}/list/{url_suffix}" if base_url else "#"
 
-        # Div içeriğini güncelle
-        updated_content = f"  Lig Sports HD | 3 {full_url} {target_url}\n"
+        # Güncellenmiş içerik
+        updated_content = f"  {lig_sports_name} {full_url} {target_url}\n"
 
-        # Div içeriğini değiştir
+        # HTML'deki ilgili div içeriğini değiştir
         content = re.sub(
             rf'(<div class=[\'\"]{class_name}[\'\"][^>]*>)(.*?)(</div>)',
             rf'\1\n{updated_content}\n\3',
