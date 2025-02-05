@@ -53,15 +53,15 @@ except Exception as e:
 # 9 saniye bekle
 time.sleep(9)
 
-# <button type="button"> öğesine tıkla
+# "REKLAMI GEÇ" butonuna tıklama
 try:
-    button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[@type='button']"))
+    reklami_gec_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[text()='REKLAMI GEÇ']"))
     )
-    button.click()
-    print("✅ <button type='button'> öğesine tıklandı.")
+    reklami_gec_button.click()
+    print("✅ 'REKLAMI GEÇ' butonuna tıklandı.")
 except Exception as e:
-    print("❌ <button type='button'> öğesi tıklanamadı:", e)
+    print("❌ 'REKLAMI GEÇ' butonuna tıklanamadı:", e)
 
 
 # .m3u8 linklerini çekme
