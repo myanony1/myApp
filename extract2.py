@@ -77,8 +77,22 @@ driver.quit()
 domain = ""
 if m3u8_urls:
     sample_url = next(iter(m3u8_urls))  # Set'ten bir URL seç
-    domain = "/".join(sample_url.split("/")[:3])  # URL'yi parçalayarak domaini al
+    domain = f"{sample_url.split('//')[0]}//{sample_url.split('/')[2]}/"  # Domaini formatla: https://hedef/
     print(f"✅ Domain alındı: {domain}")  # Domaini yazdır
+
+    # Artık domain ile m3u8 URL'sinin tam halini oluşturabilirsiniz
+    for class_name, url_suffix in exolig_classes.items():
+        full_url = f"{domain}list/{url_suffix}"  # Tam URL'yi oluştur
+        updated_content = f"  Lig Sports HD | 3 {full_url} {target_url}\n"
+        
+        # Div içeriğini değiştir
+        content = re.sub(
+            rf'(<div class=[\'\"]{class_name}[\'\"][^>]*>)(.*?)(</div>)',
+            rf'\1\n{updated_content}\n\3',
+            content,
+            flags=re.DOTALL
+        )
+
 
 # Güncellenmiş class isimleri ve URL değişiklikleri
 exolig_classes = {
