@@ -53,14 +53,14 @@ try:
     driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
     driver.execute_script("arguments[0].click();", player_div)
     print("✅ <div id='player'> öğesine tıklandı.")
-    time.sleep(10)  # 10 saniye bekle
+    time.sleep(10)  # 10 saniye bekleme süresi eklendi
 except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
 
 # "REKLAMI GEC" butonuna tıkla
 try:
     skip_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEÇ')]")
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEC')]")
     ))
     ActionChains(driver).move_to_element(skip_button).click().perform()
     print("✅ 'REKLAMI GEC' butonuna tıklandı.")
@@ -84,13 +84,19 @@ for entry in logs:
 
 driver.quit()
 
+# Dinamik olarak ana domaini belirle
+domain = ""
+if m3u8_urls:
+    sample_url = next(iter(m3u8_urls))
+    domain = "/".join(sample_url.split("/")[:3])  # Ana domaini al
+
 # Güncellenmiş class isimleri ve URL değişiklikleri
 exolig_classes = {
-    "exoligbir3": "list/yayinstar.m3u8",
-    "exolig2": "list/yayinb2.m3u8",
-    "exolig3": "list/yayinb3.m3u8",
-    "exolig4": "list/yayinb4.m3u8",
-    "exolig5": "list/yayinb5.m3u8",
+    "exoligbir3": "yayinstar.m3u8",
+    "exolig2": "yayinb2.m3u8",
+    "exolig3": "yayinb3.m3u8",
+    "exolig4": "yayinb4.m3u8",
+    "exolig5": "yayinb5.m3u8",
 }
 
 # HTML dosyasını aç ve içeriği güncelle
@@ -99,10 +105,7 @@ try:
         content = f.read()
 
     for class_name, url_suffix in exolig_classes.items():
-        new_content = "\n".join(
-            [f"<div class='{class_name}' style='display:none'>\n  Lig Sports {index} HD | 3 {url.replace(url.split('/')[-1], url_suffix)} {target_url}\n</div>" 
-             for index, url in enumerate(m3u8_urls, start=1)]
-        )
+        new_content = f"<div class='{class_name}' style='display:none'>\n  Lig Sports HD | 3 {domain}/list/{url_suffix} {target_url}\n</div>"
         
         # Sınıfa göre içeriği değiştir
         content = re.sub(
