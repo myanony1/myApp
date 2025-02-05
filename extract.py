@@ -17,8 +17,15 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 # ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
+# Kısaltılmış URL'yi aç ve yönlendirilen son URL'yi al
+short_url = "https://t.ly/_u07W"
+driver.get(short_url)
+
+# Yönlendirilen son URL'yi al
+target_url = driver.current_url
+print(f"✅ Yönlendirilen son URL: {target_url}")
+
 # Hedef URL'yi aç
-target_url = "http://trgoals1152.xyz/"
 driver.get(target_url)
 
 # Sayfanın tamamen yüklenmesini bekle
