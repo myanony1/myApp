@@ -30,16 +30,16 @@ def get_target_url():
         )
         print("✅ Linkler bölümü yüklendi")
         
-        # İlk linki bul
+        # İlk linki bul ve JavaScript ile gerçek URL'yi al
         first_link = WebDriverWait(driver, 10).until(
             EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
         )
-        first_url = first_link.get_attribute('href')
+        first_url = driver.execute_script("return arguments[0].href;", first_link)
         print(f"🔗 İlk link URL: {first_url}")
         
-        # Linke tıkla
-        first_link.click()
-        print("🖱️ İlk linke tıklandı")
+        # Doğrudan hedef URL'ye git (Bit.ly bypass)
+        print("⏩ Bit.ly bypass ediliyor...")
+        driver.get(first_url)
         
         # 10 saniye bekleyerek ek yönlendirmeler için
         print("⏳ Ek yönlendirmeler bekleniyor (10sn)...")
@@ -47,7 +47,7 @@ def get_target_url():
         
         # Son URL kontrolü
         WebDriverWait(driver, 30).until(
-            lambda d: d.current_url != first_url
+            lambda d: "taraftarium" in d.current_url.lower() or "trgoals" in d.current_url.lower()
         )
         target_url = driver.current_url
         print(f"🎯 Son hedef URL: {target_url}")
