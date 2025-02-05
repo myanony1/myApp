@@ -1,6 +1,5 @@
 import json
 import re
-import time
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
@@ -8,156 +7,124 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 
-# Chrome ayarları
+# Chrome seçeneklerini ayarla
 chrome_options = Options()
-chrome_options.add_argument('--headless')
+chrome_options.add_argument('--headless')  # Arka planda çalıştır
 chrome_options.add_argument('--disable-gpu')
 chrome_options.add_argument('--no-sandbox')
-chrome_options.add_argument('--disable-dev-shm-usage')
 chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 
+# ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
-# 1. ADIM: Bit.ly üzerinden ilk yönlendirme
-def get_target_url():
-    try:
-        print("🌐 Bit.ly bağlantısına gidiliyor...")
-        driver.get("https://bit.ly/m/taraftarium24w")
-        
-        # Linkler bölümünün yüklenmesini bekle
-        WebDriverWait(driver, 20).until(
-            EC.presence_of_element_located((By.XPATH, "//section[@class='links']"))
-        )
-        print("✅ Linkler bölümü yüklendi")
-        
-        # İlk linki bul ve JavaScript ile gerçek URL'yi al
-        first_link = WebDriverWait(driver, 10).until(
-            EC.element_to_be_clickable((By.XPATH, "(//section[@class='links']/a)[1]"))
-        )
-        first_url = driver.execute_script("return arguments[0].href;", first_link)
-        print(f"🔗 İlk link URL: {first_url}")
-        
-        # Doğrudan hedef URL'ye git (Bit.ly bypass)
-        print("⏩ Bit.ly bypass ediliyor...")
-        driver.get(first_url)
-        
-        # 10 saniye bekleyerek ek yönlendirmeler için
-        print("⏳ Ek yönlendirmeler bekleniyor (10sn)...")
-        time.sleep(10)
-        
-        # Son URL kontrolü
-        WebDriverWait(driver, 30).until(
-            lambda d: "taraftarium" in d.current_url.lower() or "trgoals" in d.current_url.lower()
-        )
-        target_url = driver.current_url
-        print(f"🎯 Son hedef URL: {target_url}")
-        
-        return target_url
-        
-    except Exception as e:
-        print(f"❌ Kritik hata: {str(e)}")
-        return None
+# Hedef URL'yi aç
+target_url = "http://trgoals1152.xyz/"
+driver.get(target_url)
 
-# Hedef URL'yi al
-target_url = get_target_url()
-
-if not target_url:
-    driver.quit()
-    exit()
-
-# 2. ADIM: Son hedef sitede işlemler
+# Sayfanın tamamen yüklenmesini bekle
 try:
-    print(f"🌍 Hedef siteye gidiliyor: {target_url}")
-    driver.get(target_url)
-    
-    # Sayfanın tam yüklenmesini garanti altına al
     WebDriverWait(driver, 30).until(
-        EC.presence_of_element_located((By.TAG_NAME, 'body'))
+        EC.presence_of_element_located((By.TAG_NAME, "body"))
     )
-    
-    # Logo tıklama
-    WebDriverWait(driver, 15).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, "a.topLogo1"))
-    ).click()
-    print("✅ Logoya tıklandı")
-    
-    # Sayfa pozisyonu ayarla
-    driver.execute_script("window.scrollTo(0, 700)")
-    
-    # Video player'ı aktifleştir
-    player = WebDriverWait(driver, 10).until(
-        EC.presence_of_element_located((By.ID, "player"))
-    )
-    driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", player)
-    player.click()
-    print("▶️ Video oynatıcı aktif")
-    
-    # Reklam geç butonu
-    WebDriverWait(driver, 20).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(., 'REKLAMI GEC')]"))
-    ).click()
-    print("✅ Reklam geçildi")
-
+    print("✅ Sayfa tamamen yüklendi.")
 except Exception as e:
-    print(f"⚠️ İşlem hatası: {str(e)}")
+    print("❌ Sayfa yüklenemedi:", e)
 
-# 3. ADIM: M3U8 linklerini topla
-m3u8_links = set()
+# <a> öğesini tıklamak (logo)
 try:
-    print("🔍 M3U8 linkleri aranıyor...")
-    logs = driver.get_log('performance')
-    
-    for entry in logs:
-        try:
-            log = json.loads(entry['message'])['message']
-            if log['method'] == 'Network.responseReceived':
-                url = log['params']['response']['url']
-                if '.m3u8' in url and 'video.twimg.com' not in url:
-                    m3u8_links.add(url)
-        except:
-            continue
-            
-    print(f"📥 {len(m3u8_links)} adet M3U8 linki bulundu")
-    
+    logo_link = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.CSS_SELECTOR, "a.topLogo1"))
+    )
+    logo_link.click()
+    print("✅ Logo tıklanarak ana sayfaya yönlendirildi.")
 except Exception as e:
-    print(f"❌ Log okuma hatası: {str(e)}")
+    print("❌ Logo öğesi tıklanamadı:", e)
 
-# 4. ADIM: HTML güncelleme
-if m3u8_links:
+# Sayfayı kaydır
+try:
+    driver.execute_script("window.scrollTo(0, 500);")
+    print("✅ Sayfa kaydırıldı.")
+except Exception as e:
+    print("❌ Sayfa kaydırılamadı:", e)
+
+# <div id="player"> öğesine tıkla
+try:
+    player_div = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.ID, "player"))
+    )
+    driver.execute_script("arguments[0].scrollIntoView(true);", player_div)
+    driver.execute_script("arguments[0].click();", player_div)
+    print("✅ <div id='player'> öğesine tıklandı.")
+except Exception as e:
+    print("❌ <div id='player'> öğesi tıklanamadı:", e)
+
+# 10 saniye bekle
+WebDriverWait(driver, 10).until(lambda driver: True)
+
+# "REKLAMI GEC" butonuna tıkla
+try:
+    skip_button = WebDriverWait(driver, 10).until(
+        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEC')]"))
+    )
+    ActionChains(driver).move_to_element(skip_button).click().perform()
+    print("✅ 'REKLAMI GEC' butonuna tıklandı.")
+except Exception as e:
+    print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
+
+# .m3u8 linklerini çekme (video.twimg.com dışındakiler)
+logs = driver.get_log("performance")
+m3u8_urls = set()
+
+for entry in logs:
     try:
-        with open('.index.html', 'r+', encoding='utf-8') as f:
-            content = f.read()
-            
-            # exotrgoals1 güncelle
-            exo1 = "\n".join([
-                f"Lig Sports {idx} HD | 1 {url.rsplit('/', 1)[0]}/yayinzirve.m3u8 {target_url}"
-                for idx, url in enumerate(m3u8_links, 1)
-            ])
-            content = re.sub(
-                r'(<div class="exotrgoals1">).*?(</div>)',
-                rf'\1\n{exo1}\n\2',
-                content,
-                flags=re.DOTALL
-            )
-            
-            # exotrgoals2 güncelle
-            exo2 = "\n".join([
-                f"Lig Sports {idx} HD | 2 {url.rsplit('/', 1)[0]}/yayin1.m3u8 {target_url}"
-                for idx, url in enumerate(m3u8_links, 1)
-            ])
-            content = re.sub(
-                r'(<div class="exotrgoals2">).*?(</div>)',
-                rf'\1\n{exo2}\n\2',
-                content,
-                flags=re.DOTALL
-            )
-            
-            f.seek(0)
-            f.write(content)
-            f.truncate()
-            print("🔄 HTML başarıyla güncellendi")
-            
-    except Exception as e:
-        print(f"❌ Dosya işleme hatası: {str(e)}")
-        
+        log_json = json.loads(entry["message"])
+        message = log_json.get("message", {})
+        if message.get("method") == "Network.responseReceived":
+            response_url = message.get("params", {}).get("response", {}).get("url", "")
+            if ".m3u8" in response_url and not response_url.startswith("https://video.twimg.com"):
+                m3u8_urls.add(response_url)
+    except Exception:
+        pass  # Hataları yoksay
+
 driver.quit()
+
+# URLs'yi alıp exotrgoals1 ve exotrgoals2 içeriğini oluştur
+new_content_exotrgoals1 = "\n".join(
+    [f"Lig Sports {index} HD | 1 {url.replace(url.split('/')[-1], 'yayinzirve.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
+)
+new_content_exotrgoals2 = "\n".join(
+    [f"Lig Sports {index} HD | 2 {url.replace(url.split('/')[-1], 'yayin1.m3u8')} {target_url}" for index, url in enumerate(m3u8_urls, start=1)]
+)
+
+# HTML dosyasını aç ve sadece mevcut div içeriğini değiştir
+try:
+    with open(".index.html", "r", encoding="utf-8") as f:
+        content = f.read()
+
+    # Sadece içeriği değiştirmek için regex ile güncelleme yapıyoruz
+    updated_content = re.sub(
+        r'(<div class=[\'"]exotrgoals1[\'"][^>]*>)(.*?)(</div>)',
+        rf'\1\n{new_content_exotrgoals1}\n\3',
+        content,
+        flags=re.DOTALL
+    )
+    
+    updated_content = re.sub(
+        r'(<div class=[\'"]exotrgoals2[\'"][^>]*>)(.*?)(</div>)',
+        rf'\1\n{new_content_exotrgoals2}\n\3',
+        updated_content,
+        flags=re.DOTALL
+    )
+
+    # Eğer içerik değiştiyse dosyayı güncelle
+    if updated_content != content:
+        with open(".index.html", "w", encoding="utf-8") as f:
+            f.write(updated_content)
+        print("✅ exotrgoals1 ve exotrgoals2 div içerikleri güncellendi.")
+    else:
+        print("ℹ️ exotrgoals1 ve exotrgoals2 içerikleri zaten güncel.")
+    
+except FileNotFoundError:
+    print("❌ Hata: .index.html dosyası bulunamadı.")
+except Exception as e:
+    print(f"❌ Dosya güncellenirken hata oluştu: {e}")
