@@ -54,16 +54,17 @@ except Exception as e:
     print("❌ <div id='player'> öğesi tıklanamadı:", e)
     
 
-# "REKLAMI GEC" butonuna tıkla
+# "REKLAMI GEC" butonuna tıklama (yeni buton)
 try:
+    # Yeni reklam butonunun Xpath'ini kullanıyoruz
     skip_button = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.XPATH, "//button[contains(text(), 'REKLAMI GEÇ')]"))
+        EC.element_to_be_clickable((By.XPATH, "//div[@data-adv]//button"))
     )
     ActionChains(driver).move_to_element(skip_button).click().perform()
-    print("✅ 'REKLAMI GEC' butonuna tıklandı.")
+    print("✅ 'REKLAMI GEÇ' butonuna tıklandı.")
     time.sleep(5)  # 5 saniye bekleme süresi eklendi
 except Exception as e:
-    print("❌ 'REKLAMI GEC' butonu bulunamadı veya tıklanamadı:", e)
+    print("❌ 'REKLAMI GEÇ' butonu bulunamadı veya tıklanamadı:", e)
 
 
 # .m3u8 linklerini çekme
