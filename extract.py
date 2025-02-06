@@ -17,27 +17,31 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 # ChromeDriver'ı başlat
 driver = webdriver.Chrome(options=chrome_options)
 
-# Hedef URL'yi bulmak için döngü
-base_url = "http://trgoals"
-found = False
+# Önce yönlendirme URL'sine git
+redirect_url = "https://redirect-8cm92m37m263m4236.pages.dev"
+driver.get(redirect_url)
 
-for i in range(1152, 1201):
-    target_url = f"{base_url}{i}.xyz/"
-    try:
-        driver.get(target_url)
-        WebDriverWait(driver, 10).until(
-            EC.presence_of_element_located((By.TAG_NAME, "body"))
-        )
-        print(f"✅ Sayfa {target_url} tamamen yüklendi.")
-        found = True
-        break
-    except Exception as e:
-        print(f"❌ Sayfa {target_url} yüklenemedi: {e}")
-
-if not found:
-    print("❌ Hiçbir sayfa yüklenemedi.")
+# Sayfanın tamamen yüklenmesini bekle ve yönlendirilen URL'yi al
+try:
+    WebDriverWait(driver, 10).until(EC.presence_of_element_located((By.TAG_NAME, "body")))
+    target_url = driver.current_url  # Yönlendirilmiş URL'yi al
+    print(f"✅ Yönlendirme sonrası hedef URL: {target_url}")
+except Exception as e:
+    print("❌ Yönlendirme başarısız:", e)
     driver.quit()
     exit()
+
+# Yeni hedef URL'ye git
+driver.get(target_url)
+
+# Sayfanın tamamen yüklenmesini bekle
+try:
+    WebDriverWait(driver, 30).until(
+        EC.presence_of_element_located((By.TAG_NAME, "body"))
+    )
+    print("✅ Sayfa tamamen yüklendi.")
+except Exception as e:
+    print("❌ Sayfa yüklenemedi:", e)
 
 # <a> öğesini tıklamak (logo)
 try:
