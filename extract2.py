@@ -47,6 +47,10 @@ exolig_classes = {
     "exolig5": ("Lig Sports 5 HD", "yayinb5.m3u8"),
     "exoss1": ("S Sport 1 HD", "yayinss.m3u8"),  # Yeni eklendi
     "exoss2": ("S Sport 2 HD", "yayinss2.m3u8"),  # Yeni eklendi
+    "exot1": ("Tivibu Spor 1 HD", "yayint1.m3u8"),  # Yeni eklendi
+    "exot2": ("Tivibu Spor 2 HD", "yayint2.m3u8"),  # Yeni eklendi
+    "exot3": ("Tivibu Spor 3 HD", "yayint3.m3u8"),  # Yeni eklendi
+    "exot4": ("Tivibu Spor 4 HD", "yayint4.m3u8"),  # Yeni eklendi
 }
 
 # HTML dosyasını aç ve içeriği güncelle
