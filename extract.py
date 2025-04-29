@@ -18,7 +18,7 @@ chrome_options.set_capability("goog:loggingPrefs", {"performance": "ALL"})
 driver = webdriver.Chrome(options=chrome_options)
 
 # Önce yönlendirme URL'sine git
-redirect_url = "https://redirect-7164cfba93.pages.dev"
+redirect_url = "https://redirect-09385010482752.pages.dev"
 driver.get(redirect_url)
 
 # Sayfanın tamamen yüklenmesini bekle ve yönlendirilen URL'yi al
