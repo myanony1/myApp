@@ -43,16 +43,6 @@ try:
 except Exception as e:
     print("❌ Sayfa yüklenemedi:", e)
 
-# <a> öğesini tıklamak (logo)
-try:
-    logo_link = WebDriverWait(driver, 10).until(
-        EC.element_to_be_clickable((By.CSS_SELECTOR, ".nav-links a"))
-    )
-    logo_link.click()
-    print("✅ Logo tıklanarak ana sayfaya yönlendirildi.")
-except Exception as e:
-    print("❌ Logo öğesi tıklanamadı:", e)
-
 # Sayfayı kaydır
 try:
     driver.execute_script("window.scrollTo(0, 500);")
